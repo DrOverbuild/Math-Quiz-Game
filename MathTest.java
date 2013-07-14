@@ -191,9 +191,9 @@ class enterlistener implements ActionListener, KeyListener{
 			MathTest.EnterText("Font changed to " + newFont);
 			
 			MathTest.input.selectAll();
-		}else if(txt.toLowerCase().contains("/testwrap")){
+		}else if(txt.toLowerCase().contains("/say")){
 			char data[] = txt.toCharArray();
-			String txtForWrapTest = String.copyValueOf(data, 10, data.length - 10);
+			String txtForWrapTest = String.copyValueOf(data, 5, data.length - 5);
 			MathTest.EnterText(txtForWrapTest);
 			
 			MathTest.input.selectAll();
