@@ -20,7 +20,7 @@ import javax.swing.text.BadLocationException;
  */
 
 @SuppressWarnings("serial")
-public class MathTest extends JFrame {
+public class MathTest extends JFrame implements ActionListener, KeyListener{
 	
 	JScrollPane scrollPane;
 	JPanel inputPanel;
@@ -84,8 +84,8 @@ public class MathTest extends JFrame {
 		input.setFont(new java.awt.Font("Courier", 0, 12));
 		inputPanel = new JPanel();
 		enter = new JButton("Enter");
-		enter.addActionListener(new enterlistener());
-		input.addKeyListener(new enterlistener());
+		enter.addActionListener(this);
+		input.addKeyListener(this);
 		inputPanel.add(input);
 		inputPanel.add(enter);
 		add(inputPanel, BorderLayout.SOUTH);
@@ -122,85 +122,39 @@ public class MathTest extends JFrame {
 		state = newState;
 	}
 
+	public static void newNumbers(){
+		
+		numberOfTimesPlayed += 1;
+		EnterText("Question #" + numberOfTimesPlayed);
+		
+		if (difficultyLevel == 0){
+			number1 = generator.nextInt(11);
+			number2 = generator.nextInt(11);
+		} else if (difficultyLevel == 1){
+			number1 = generator.nextInt(21);
+			number2 = generator.nextInt(21);
+		} else if (difficultyLevel == 2) {
+			number1 = generator.nextInt(41) - 20;
+			number2 = generator.nextInt(41) - 20;
+		}
+		
+		total= number1 + number2;
+		EnterText("What is " + number1 + " + " + number2 + "?");
+	}
 	
 	public static void nextQuestion(int numberOne, int numberTwo, int answer){
 		if (numberOfTimesPlayed <= 9){
-			if (difficultyLevel == 0){
 				if (total == answer){
 					EnterText("You are correct!");
 					score += 10;
-
-					numberOfTimesPlayed += 1;
-					EnterText("Question #" + numberOfTimesPlayed);
-
-					number1 = generator.nextInt(11);
-					number2 = generator.nextInt(11);
-					total = number1 + number2;
-
-					EnterText("What is " + number1 + " + " + number2 + "?");
+					
+					newNumbers();
 				} else {
 					EnterText("Wrong.");
 
-					numberOfTimesPlayed += 1;
-					EnterText("Question #" + numberOfTimesPlayed);
+					newNumbers();
 
-					number1 = generator.nextInt(11);
-					number2 = generator.nextInt(11);
-					total = number1 + number2;
-
-					EnterText("What is " + number1 + " + " + number2 + "?");
 				}
-			}else if (difficultyLevel == 1){
-				if (total == answer){
-					EnterText("You are correct!");
-					score += 10;
-
-					numberOfTimesPlayed += 1;
-					EnterText("Question #" + numberOfTimesPlayed);
-
-					number1 = generator.nextInt(21);
-					number2 = generator.nextInt(21);
-					total = number1 + number2;
-
-					EnterText("What is " + number1 + " + " + number2 + "?");
-				} else {
-					EnterText("Wrong.");
-
-					numberOfTimesPlayed += 1;
-					EnterText("Question #" + numberOfTimesPlayed);
-
-					number1 = generator.nextInt(21);
-					number2 = generator.nextInt(21);
-					total = number1 + number2;
-
-					EnterText("What is " + number1 + " + " + number2 + "?");
-				}
-			}else if (difficultyLevel == 2){
-				if (total == answer){
-					EnterText("You are correct!");
-					score += 10;
-
-					numberOfTimesPlayed += 1;
-					EnterText("Question #" + numberOfTimesPlayed);
-
-					number1 = generator.nextInt(41) - 20;
-					number2 = generator.nextInt(41) - 20;
-					total = number1 + number2;
-
-					EnterText("What is " + number1 + " + " + number2 + "?");
-				} else {
-					EnterText("Wrong.");
-
-					numberOfTimesPlayed += 1;
-					EnterText("Question #" + numberOfTimesPlayed);
-
-					number1 = generator.nextInt(41) - 20;
-					number2 = generator.nextInt(41) - 20;
-					total = number1 + number2;
-
-					EnterText("What is " + number1 + " + " + number2 + "?");
-				}
-			}
 		} else {
 			
 			if (total == answer){
@@ -216,111 +170,96 @@ public class MathTest extends JFrame {
 			EnterText("Play again? (Y/N)");
 		}
 	}
-
-	public static void main(String[] args) {
-		
-		new MathTest();
-
-	}
-
-}
-
-class enterlistener implements ActionListener, KeyListener{
 	
 	public void somethingHappened(){
 		
 		String txt = "";
+		String txtToLowerCase = "";
+		txt = input.getText();
+		txtToLowerCase = txt.toLowerCase();
 		
-		try{
-			txt = MathTest.input.getText();
-		} catch (NullPointerException e){
-			// Do Nothing
-		}
-		
-		if (txt.equals("Y") || txt.equals("y") || txt.equals("/restart")){
-			MathTest.EnterText("Okay, here we go!");
-			MathTest.score = 0;
-			MathTest.numberOfTimesPlayed = 1;
-			MathTest.EnterText("Question #" + MathTest.numberOfTimesPlayed);
-			MathTest.number1 = MathTest.generator.nextInt(20);
-			MathTest.number2 = MathTest.generator.nextInt(20);
-			MathTest.total = MathTest.number1 + MathTest.number2;
-			MathTest.EnterText("What is " + MathTest.number1 + " + " + MathTest.number2 + "?");
-			MathTest.input.selectAll();
-		} else if (txt.equals("N") || txt.equals("n") || txt.equals("/quit")){
-			MathTest.EnterText("Okay. Good-bye.");
-			MathTest.EnterText("Thank you for playing.");
-			MathTest.EnterText("Please quit this application by clicking the red button on");
-			MathTest.EnterText("the top of the window.");
+		if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
+			EnterText("Please enter your difficulty: Elementary, Middle School, High School");
+			setQuestionState(DIFFICULTY_CHANGING_STATE);
 			
-			MathTest.input.setText("");
+			input.selectAll();
+		} else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
+			EnterText("Okay. Good-bye.");
+			EnterText("Thank you for playing.");
+			EnterText("Please quit this application by clicking the red button on");
+			EnterText("the top of the window.");
 			
-			MathTest.input.setEditable(false);
-			MathTest.enter.setEnabled(false);
+			input.setText("");
 			
-		}else if(txt.toLowerCase().equals("/clear")){
-			MathTest.consoleMessages.setText("");
-			MathTest.input.selectAll();
-			MathTest.EnterText(MathTest.LastLine1); 
-		}else if (txt.toLowerCase().contains("/setfont")){
+			input.setEditable(false);
+			enter.setEnabled(false);
+			
+		}else if(txtToLowerCase.equals("/clear")){
+			consoleMessages.setText("");
+			input.selectAll();
+			EnterText(LastLine1); 
+		}else if (txtToLowerCase.contains("/setfont")){
 			char data[] = txt.toCharArray();
 			String newFont = String.copyValueOf(data, 9, data.length - 9);
 			
-			MathTest.input.setFont(new java.awt.Font(newFont, 0, 12));
-			MathTest.consoleMessages.setFont(new java.awt.Font(newFont,0, 12));
+			input.setFont(new java.awt.Font(newFont, 0, 12));
+			consoleMessages.setFont(new java.awt.Font(newFont,0, 12));
 			
-			MathTest.EnterText("Font changed to " + newFont);
+			EnterText("Font changed to " + newFont);
 			
-			MathTest.input.selectAll();
-		}else if(txt.toLowerCase().contains("/say")){
+			input.selectAll();
+		}else if(txtToLowerCase.contains("/say")){
 			char data[] = txt.toCharArray();
 			String txtForWrapTest = String.copyValueOf(data, 5, data.length - 5);
-			MathTest.EnterText(txtForWrapTest);
+			EnterText(txtForWrapTest);
 			
-			MathTest.input.selectAll();
-		}else if(txt.toLowerCase().equals("elementary") && MathTest.state == MathTest.DIFFICULTY_CHANGING_STATE){
-			MathTest.setDifficulty(MathTest.ELEMENTARY_DIFFICULTY);
-			MathTest.EnterText("Starting a new game set in the Elementary Difficulty.");
-			MathTest.numberOfTimesPlayed = 1;
-			MathTest.EnterText("Question #" + MathTest.numberOfTimesPlayed);
-			MathTest.number1 = MathTest.generator.nextInt(11);
-			MathTest.number2 = MathTest.generator.nextInt(11);
-			MathTest.total = MathTest.number1 + MathTest.number2;
-			MathTest.input.requestFocusInWindow();
-			MathTest.input.selectAll();
-			MathTest.EnterText("What is " + MathTest.number1 + " + " + MathTest.number2 + "?");
-		}else if(txt.toLowerCase().equals("middle school") && MathTest.state == MathTest.DIFFICULTY_CHANGING_STATE){
-			MathTest.setDifficulty(MathTest.MIDDLE_SCHOOL_DIFFICULTY);
-			MathTest.EnterText("Starting a new game set in the Middle School Difficulty.");
-			MathTest.numberOfTimesPlayed = 1;
-			MathTest.EnterText("Question #" + MathTest.numberOfTimesPlayed);
-			MathTest.number1 = MathTest.generator.nextInt(11);
-			MathTest.number2 = MathTest.generator.nextInt(11);
-			MathTest.total = MathTest.number1 + MathTest.number2;
-			MathTest.EnterText("What is " + MathTest.number1 + " + " + MathTest.number2 + "?");
-			MathTest.input.requestFocusInWindow();
-			MathTest.input.selectAll();
-		}else if(txt.toLowerCase().equals("high school") && MathTest.state == MathTest.DIFFICULTY_CHANGING_STATE){
-			MathTest.setDifficulty(MathTest.HIGH_SCHOOL_DIFFICULTY);
-			MathTest.EnterText("Starting a new game set in the High School Difficulty.");
-			MathTest.numberOfTimesPlayed = 1;
-			MathTest.EnterText("Question #" + MathTest.numberOfTimesPlayed);
-			MathTest.number1 = MathTest.generator.nextInt(11);
-			MathTest.number2 = MathTest.generator.nextInt(11);
-			MathTest.total = MathTest.number1 + MathTest.number2;
-			MathTest.EnterText("What is " + MathTest.number1 + " + " + MathTest.number2 + "?");
-			MathTest.input.requestFocusInWindow();
-			MathTest.input.selectAll();
+			input.selectAll();
+		}else if(txtToLowerCase.equals("elementary") && state == DIFFICULTY_CHANGING_STATE){
+			setDifficulty(ELEMENTARY_DIFFICULTY);
+			EnterText("Starting a new game set in the Elementary Difficulty.");
+			numberOfTimesPlayed = 1;
+			score = 0;
+			EnterText("Question #" + numberOfTimesPlayed);
+			number1 = generator.nextInt(11);
+			number2 = generator.nextInt(11);
+			total = number1 + number2;
+			input.requestFocusInWindow();
+			input.selectAll();
+			EnterText("What is " + number1 + " + " + number2 + "?");
+		}else if(txtToLowerCase.equals("middle school") && state == DIFFICULTY_CHANGING_STATE){
+			setDifficulty(MIDDLE_SCHOOL_DIFFICULTY);
+			EnterText("Starting a new game set in the Middle School Difficulty.");
+			numberOfTimesPlayed = 1;
+			score = 0;
+			EnterText("Question #" + numberOfTimesPlayed);
+			number1 = generator.nextInt(11);
+			number2 = generator.nextInt(11);
+			total = number1 + number2;
+			EnterText("What is " + number1 + " + " + number2 + "?");
+			input.requestFocusInWindow();
+			input.selectAll();
+		}else if(txtToLowerCase.equals("high school") && state == DIFFICULTY_CHANGING_STATE){
+			setDifficulty(HIGH_SCHOOL_DIFFICULTY);
+			EnterText("Starting a new game set in the High School Difficulty.");
+			numberOfTimesPlayed = 1;
+			score = 0;
+			EnterText("Question #" + numberOfTimesPlayed);
+			number1 = generator.nextInt(11);
+			number2 = generator.nextInt(11);
+			total = number1 + number2;
+			EnterText("What is " + number1 + " + " + number2 + "?");
+			input.requestFocusInWindow();
+			input.selectAll();
 		}else {
 			try{ 
-				int inputValue = Integer.parseInt(MathTest.input.getText());
-				MathTest.nextQuestion(MathTest.number1, MathTest.number2, inputValue);
-				MathTest.input.requestFocusInWindow();
-				MathTest.input.selectAll();
+				int inputValue = Integer.parseInt(input.getText());
+				nextQuestion(number1, number2, inputValue);
+				input.requestFocusInWindow();
+				input.selectAll();
 			} catch (NumberFormatException e){
-				MathTest.EnterText("Please type a number or one of the");
-				MathTest.EnterText("commands available");
-				MathTest.input.selectAll();
+				EnterText("Please type a number or one of the");
+				EnterText("commands available");
+				input.selectAll();
 			}
 		}
 	}
@@ -341,5 +280,11 @@ class enterlistener implements ActionListener, KeyListener{
 	public void keyReleased(KeyEvent e){
 		
 	}
-	
+
+	public static void main(String[] args) {
+		
+		new MathTest();
+
+	}
+
 }
