@@ -34,7 +34,6 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	static Random generator = new Random();
 	static JButton enter;
 	static String LastLine1;
-	static String LastLine2;
 	static int difficultyLevel;
 	
 	// This field stores what the program
@@ -65,7 +64,6 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		setLayout(b33);
 		
 		LastLine1 = "";
-		LastLine2 = "";
 
 		consoleMessages = new JTextArea(35,60);
 		consoleMessages.setEditable(false);
@@ -111,7 +109,6 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		String newValue = currentValue + input + "\n";
 		consoleMessages.setText(newValue);
 		LastLine1 = input;
-		LastLine2 = LastLine1;
 	}
 	
 	public static void setDifficulty(int newDifficulty){
@@ -178,89 +175,118 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		txt = input.getText();
 		txtToLowerCase = txt.toLowerCase();
 		
-		if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
-			EnterText("Please enter your difficulty: Elementary, Middle School, High School");
-			setQuestionState(DIFFICULTY_CHANGING_STATE);
+		if (state == VARIABLE_STATE){
+			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
+				EnterText("Please enter your difficulty: Elementary, Middle School, High School");
+				setQuestionState(DIFFICULTY_CHANGING_STATE);
 			
-			input.selectAll();
-		} else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
-			EnterText("Okay. Good-bye.");
-			EnterText("Thank you for playing.");
-			EnterText("Please quit this application by clicking the red button on");
-			EnterText("the top of the window.");
-			
-			input.setText("");
-			
-			input.setEditable(false);
-			enter.setEnabled(false);
-			
-		}else if(txtToLowerCase.equals("/clear")){
-			consoleMessages.setText("");
-			input.selectAll();
-			EnterText(LastLine1); 
-		}else if (txtToLowerCase.contains("/setfont")){
-			char data[] = txt.toCharArray();
-			String newFont = String.copyValueOf(data, 9, data.length - 9);
-			
-			input.setFont(new java.awt.Font(newFont, 0, 12));
-			consoleMessages.setFont(new java.awt.Font(newFont,0, 12));
-			
-			EnterText("Font changed to " + newFont);
-			
-			input.selectAll();
-		}else if(txtToLowerCase.contains("/say")){
-			char data[] = txt.toCharArray();
-			String txtForWrapTest = String.copyValueOf(data, 5, data.length - 5);
-			EnterText(txtForWrapTest);
-			
-			input.selectAll();
-		}else if(txtToLowerCase.equals("elementary") && state == DIFFICULTY_CHANGING_STATE){
-			setDifficulty(ELEMENTARY_DIFFICULTY);
-			EnterText("Starting a new game set in the Elementary Difficulty.");
-			numberOfTimesPlayed = 1;
-			score = 0;
-			EnterText("Question #" + numberOfTimesPlayed);
-			number1 = generator.nextInt(11);
-			number2 = generator.nextInt(11);
-			total = number1 + number2;
-			input.requestFocusInWindow();
-			input.selectAll();
-			EnterText("What is " + number1 + " + " + number2 + "?");
-		}else if(txtToLowerCase.equals("middle school") && state == DIFFICULTY_CHANGING_STATE){
-			setDifficulty(MIDDLE_SCHOOL_DIFFICULTY);
-			EnterText("Starting a new game set in the Middle School Difficulty.");
-			numberOfTimesPlayed = 1;
-			score = 0;
-			EnterText("Question #" + numberOfTimesPlayed);
-			number1 = generator.nextInt(11);
-			number2 = generator.nextInt(11);
-			total = number1 + number2;
-			EnterText("What is " + number1 + " + " + number2 + "?");
-			input.requestFocusInWindow();
-			input.selectAll();
-		}else if(txtToLowerCase.equals("high school") && state == DIFFICULTY_CHANGING_STATE){
-			setDifficulty(HIGH_SCHOOL_DIFFICULTY);
-			EnterText("Starting a new game set in the High School Difficulty.");
-			numberOfTimesPlayed = 1;
-			score = 0;
-			EnterText("Question #" + numberOfTimesPlayed);
-			number1 = generator.nextInt(11);
-			number2 = generator.nextInt(11);
-			total = number1 + number2;
-			EnterText("What is " + number1 + " + " + number2 + "?");
-			input.requestFocusInWindow();
-			input.selectAll();
-		}else {
-			try{ 
-				int inputValue = Integer.parseInt(input.getText());
-				nextQuestion(number1, number2, inputValue);
-				input.requestFocusInWindow();
 				input.selectAll();
-			} catch (NumberFormatException e){
-				EnterText("Please type a number or one of the");
-				EnterText("commands available");
+			} else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
+				EnterText("Okay. Good-bye.");
+				EnterText("Thank you for playing.");
+				EnterText("Please quit this application by clicking the red button on");
+				EnterText("the top of the window.");
+			
+				input.setText("");
+			
+				input.setEditable(false);
+				enter.setEnabled(false);
+				setQuestionState(0);
+			}else if(txtToLowerCase.equals("/clear")){
+				consoleMessages.setText("");
 				input.selectAll();
+				EnterText(LastLine1); 
+				setQuestionState(0);
+			}else if (txtToLowerCase.contains("/setfont")){
+				char data[] = txt.toCharArray();
+				String newFont = String.copyValueOf(data, 9, data.length - 9);
+			
+				input.setFont(new java.awt.Font(newFont, 0, 12));
+				consoleMessages.setFont(new java.awt.Font(newFont,0, 12));
+			
+				EnterText("Font changed to " + newFont);
+			
+				input.selectAll();
+				setQuestionState(0);
+			}else if(txtToLowerCase.contains("/say")){
+				char data[] = txt.toCharArray();
+				String txtForWrapTest = String.copyValueOf(data, 5, data.length - 5);
+				EnterText(txtForWrapTest);
+			
+				input.selectAll();
+				setQuestionState(0);
+			}else if (txtToLowerCase.equals("/help") || txtToLowerCase.equals("/?")){
+				EnterText("Here are all the available commands, their arguments, and what they do:\n");
+				EnterText("/clear: Clears the entire log except the last line that has been displayed.\n");
+				EnterText("/help (or /?): Displays all the available commands, their arguments, and what they do.\n");
+				EnterText("/restart (or y): Restarts the game and resets the score to 0.\n");
+				EnterText("/say <msg>: Displays the message you type.\n");
+				EnterText("/setfont <font>: Changes the font of the program to the font you choose. Note that the font is case-sensitive.\n");
+				EnterText("/quit (or n): Disables the controls and requires you to quit the program.\n");
+				input.selectAll();
+				setQuestionState(0);
+			}else {
+				try{ 
+					int inputValue = Integer.parseInt(input.getText());
+					nextQuestion(number1, number2, inputValue);
+					input.requestFocusInWindow();
+					input.selectAll();
+				} catch (NumberFormatException e){
+					EnterText("Please type a number or one of the");
+					EnterText("commands available");
+					input.selectAll();
+				}
+				setQuestionState(0);
 			}
+		}else if(state == DIFFICULTY_CHANGING_STATE){
+					switch (txtToLowerCase) {
+						case "elementary":
+							setDifficulty(ELEMENTARY_DIFFICULTY);
+							EnterText("Starting a new game set in the Elementary Difficulty.");
+							numberOfTimesPlayed = 1;
+							score = 0;
+							EnterText("Question #" + numberOfTimesPlayed);
+							number1 = generator.nextInt(11);
+							number2 = generator.nextInt(11);
+							total = number1 + number2;
+							input.requestFocusInWindow();
+							input.selectAll();
+							EnterText("What is " + number1 + " + " + number2 + "?");
+							setQuestionState(0);
+							break;
+						case "middle school":
+							setDifficulty(MIDDLE_SCHOOL_DIFFICULTY);
+							EnterText("Starting a new game set in the Middle School Difficulty.");
+							numberOfTimesPlayed = 1;
+							score = 0;
+							EnterText("Question #" + numberOfTimesPlayed);
+							number1 = generator.nextInt(11);
+							number2 = generator.nextInt(11);
+							total = number1 + number2;
+							EnterText("What is " + number1 + " + " + number2 + "?");
+							input.requestFocusInWindow();
+							input.selectAll();
+							setQuestionState(0);
+							break;
+						case "high school":
+							setDifficulty(HIGH_SCHOOL_DIFFICULTY);
+							EnterText("Starting a new game set in the High School Difficulty.");
+							numberOfTimesPlayed = 1;
+							score = 0;
+							EnterText("Question #" + numberOfTimesPlayed);
+							number1 = generator.nextInt(11);
+							number2 = generator.nextInt(11);
+							total = number1 + number2;
+							EnterText("What is " + number1 + " + " + number2 + "?");		
+							input.requestFocusInWindow();
+							input.selectAll();
+							setQuestionState(0);
+							break;
+						default:
+							EnterText("That is not available at the time. Please choose a difficulty level.");
+					}
+		}else{
+			EnterText("Error: State not defined. Please report this bug to http://sourceforge.net/projects/mathquizgame/tickets/");
 		}
 	}
 
