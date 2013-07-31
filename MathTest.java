@@ -11,7 +11,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 
 /**
  * 
@@ -74,9 +73,7 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, BorderLayout.NORTH);
 		EnterText("MATH QUIZ!!! Let's see how much you know...");
-		EnterText("To start over, type /restart.");
-		EnterText("To quit, type /quit.");
-		EnterText("To clear the output, type /clear.");
+		EnterText("To see a list of a commands, type /help or /?.");
 		
 		input = new JTextField(45);
 		input.setFont(new java.awt.Font("Courier", 0, 12));
@@ -170,8 +167,8 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	
 	public void somethingHappened(){
 		
-		String txt = "";
-		String txtToLowerCase = "";
+		String txt;
+		String txtToLowerCase;
 		txt = input.getText();
 		txtToLowerCase = txt.toLowerCase();
 		
