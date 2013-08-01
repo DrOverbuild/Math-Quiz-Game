@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2013 Jasper Reddin
+ * All rights reserved
+ */
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
