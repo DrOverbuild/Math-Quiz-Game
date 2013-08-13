@@ -39,6 +39,8 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	static JButton enter;
 	static String LastLine1;
 	static int difficultyLevel;
+	static String currentFont;
+	static int currentSize;
 	
 	// This field stores what the program
 	// is waiting for when it waits for 
@@ -77,6 +79,12 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		scrollPane = new JScrollPane(consoleMessages);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, BorderLayout.NORTH);
+		
+		currentFont = "Courier";
+		currentSize = 12;
+		EnterText("Font set to Courier.");
+		EnterText("Size of font set to 12.");
+		
 		EnterText("MATH QUIZ!!! Let's see how much you know...");
 		EnterText("To see a list of a commands, type /help or /?.");
 		
@@ -119,6 +127,19 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	
 	public static void setQuestionState (int newState){
 		state = newState;
+	}
+	
+	public static String findCommandArgument(String command, String userInput){
+		
+		// This command will only find one argument.
+		
+		int lengthOfCommand = command.length() + 1;
+		int lengthOfUserInput = userInput.length();
+		int lengthOfArgument = lengthOfUserInput - lengthOfCommand;
+		char[] toCharArray = userInput.toCharArray();
+		String argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
+		
+		return argument;
 	}
 
 	public static void newNumbers(){
@@ -200,21 +221,35 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 				EnterText(LastLine1); 
 				setQuestionState(0);
 			}else if (txtToLowerCase.contains("/setfont")){
-				char data[] = txt.toCharArray();
-				String newFont = String.copyValueOf(data, 9, data.length - 9);
+				String newFont = findCommandArgument("/setfont",txt);
 			
-				input.setFont(new java.awt.Font(newFont, 0, 12));
-				consoleMessages.setFont(new java.awt.Font(newFont,0, 12));
+				input.setFont(new java.awt.Font(newFont, 0, currentSize));
+				consoleMessages.setFont(new java.awt.Font(newFont,0, currentSize));
+				currentFont = newFont;
 			
 				EnterText("Font changed to " + newFont);
 			
 				input.selectAll();
 				setQuestionState(0);
 			}else if(txtToLowerCase.contains("/say")){
-				char data[] = txt.toCharArray();
-				String txtForWrapTest = String.copyValueOf(data, 5, data.length - 5);
-				EnterText(txtForWrapTest);
+				String sayMessage = findCommandArgument("/say",txt);
+				EnterText(sayMessage);
 			
+				input.selectAll();
+				setQuestionState(0);
+			}else if (txtToLowerCase.contains("/setsize")){
+				String newSizeSTR = findCommandArgument("/setsize",txt);
+				try{
+					int newSize = Integer.parseInt(newSizeSTR);
+					input.setFont(new java.awt.Font(currentFont, 0, newSize));
+					consoleMessages.setFont(new java.awt.Font(currentFont, 0, newSize));
+					currentSize = newSize;
+					
+					EnterText("Size set to " + newSize);
+				}catch(NumberFormatException e){
+					EnterText("The new size has to be a number.");
+				}
+				
 				input.selectAll();
 				setQuestionState(0);
 			}else if (txtToLowerCase.equals("/help") || txtToLowerCase.equals("/?")){
