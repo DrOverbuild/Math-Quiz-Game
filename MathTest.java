@@ -10,11 +10,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -41,6 +46,9 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	static int difficultyLevel;
 	static String currentFont;
 	static int currentSize;
+	static File logDirectory;
+	static File log;
+	static FileWriter fileWriter;
 	
 	// This field stores what the program
 	// is waiting for when it waits for 
@@ -70,6 +78,41 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		setLayout(b33);
 		
 		LastLine1 = "";
+		
+		String userHome = System.getProperty("user.home");
+		String libraryFolder = userHome + "/Library/Application Support/mathquizgame/";
+		logDirectory = new File(libraryFolder);
+		String logFilePath = libraryFolder + "log.txt";
+		log = new File(logFilePath);
+		
+		if(!logDirectory.exists()){
+			System.out.println("Directory " + libraryFolder + " does not exist.");
+			System.out.println("Creating new directory...");
+			try{
+				boolean wasCreated = logDirectory.mkdir();
+				System.out.println("Directory created successfully");
+			}catch(SecurityException e){
+				System.out.println("SecurityException");
+			}
+		}
+		if(!log.exists()){
+			System.out.println("log.txt does not exist.");
+			System.out.println("Creating the file...");
+			try{
+				boolean doesExist = log.createNewFile();
+				System.out.println("File created successfully.");
+			}catch(SecurityException e){
+				System.out.println("SecurityException");
+			}catch(IOException otherE){
+				otherE.printStackTrace();
+			}
+		}
+		
+		try{
+			fileWriter = new FileWriter(logFilePath,true); //the true will append the new data
+		}catch(IOException ioe){
+			System.err.println("IOException: " + ioe.getMessage());
+		}
 
 		consoleMessages = new JTextArea(35,60);
 		consoleMessages.setEditable(false);
@@ -108,7 +151,7 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
 		
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setVisible(true);
 		this.setLocation(550,160);
 		pack();
@@ -119,6 +162,12 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		String newValue = currentValue + input + "\n";
 		consoleMessages.setText(newValue);
 		LastLine1 = input;
+		try {
+			fileWriter.write(input + "\n");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
 	}
 	
 	public static void setDifficulty(int newDifficulty){
@@ -197,6 +246,7 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		String txtToLowerCase;
 		txt = input.getText();
 		txtToLowerCase = txt.toLowerCase();
+		EnterText(txt);
 		
 		if (state == VARIABLE_STATE){
 			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
@@ -205,16 +255,14 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 			
 				input.selectAll();
 			} else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
-				EnterText("Okay. Good-bye.");
-				EnterText("Thank you for playing.");
-				EnterText("Please quit this application by clicking the red button on");
-				EnterText("the top of the window.");
-			
-				input.setText("");
-			
-				input.setEditable(false);
-				enter.setEnabled(false);
-				setQuestionState(0);
+				EnterText("Quiting...");
+
+				try {
+					fileWriter.close();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				System.exit(0);
 			}else if(txtToLowerCase.equals("/clear")){
 				consoleMessages.setText("");
 				input.selectAll();
