@@ -107,14 +107,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			}
 		}
 		
-		consoleMessages = new JTextArea(35,60);
+		consoleMessages = new JTextArea(20,60);
 		consoleMessages.setEditable(false);
 		consoleMessages.setFont(new java.awt.Font("Courier", 0, 12));
 		consoleMessages.setLineWrap(true);
 		consoleMessages.setWrapStyleWord(true);
 		scrollPane = new JScrollPane(consoleMessages);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		add(scrollPane, BorderLayout.NORTH);
+		add(scrollPane, BorderLayout.PAGE_START);
 		
 		printLineToFile("-------------------");
 		
@@ -124,7 +124,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("MATH QUIZ!!! Let's see how much you know...");
 		EnterText("To see a list of a commands, type /help or /?.");
 		
-		input = new JTextField(45);
+		input = new JTextField(35);
 		input.setFont(new java.awt.Font("Courier", 0, 12));
 		inputPanel = new JPanel();
 		enter = new JButton("Enter");
@@ -132,7 +132,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		input.addKeyListener(this);
 		inputPanel.add(input);
 		inputPanel.add(enter);
-		add(inputPanel, BorderLayout.SOUTH);
+		add(inputPanel, BorderLayout.PAGE_END);
 		
 		addWindowFocusListener(new WindowAdapter() {
 							   public void windowGainedFocus(WindowEvent e) {
@@ -143,10 +143,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
 		
-		setResizable(false);
+
+		
+		setResizable(true);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setVisible(true);
-		this.setLocation(550,160);
+		setLocationRelativeTo(null);
 		pack();
 	}
 	
@@ -422,6 +424,18 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public static void main(String[] args) {
+		
+		try {
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        } catch (UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        } catch (InstantiationException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
 		
 		new MathQuizGame();
 		
