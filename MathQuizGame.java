@@ -28,8 +28,7 @@ import javax.swing.*;
  * 
  */
 
-@SuppressWarnings("serial")
-public class MathTest extends JFrame implements ActionListener, KeyListener{
+public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	
 	JScrollPane scrollPane;
 	JPanel inputPanel;
@@ -48,7 +47,7 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	static int currentSize;
 	static File logDirectory;
 	static File log;
-	static FileWriter fileWriter;
+	static String logFilePath;
 	
 	// This field stores what the program
 	// is waiting for when it waits for 
@@ -67,12 +66,12 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	// Multiplayer mode, but I don't think I will
 	// put that feature in quite yet.
 	/*ObjectOutputStream outputstream;
-	ObjectInputStream inputstream;
-	ServerSocket serverThing;
-	Socket connection;*/
+	 ObjectInputStream inputstream;
+	 ServerSocket serverThing;
+	 Socket connection;*/
 	
 	
-	public MathTest() {
+	public MathQuizGame() {
 		super("Math Quiz");
 		BorderLayout b33 = new BorderLayout(5,5);
 		setLayout(b33);
@@ -82,7 +81,7 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		String userHome = System.getProperty("user.home");
 		String libraryFolder = userHome + "/Library/Application Support/mathquizgame/";
 		logDirectory = new File(libraryFolder);
-		String logFilePath = libraryFolder + "log.txt";
+		logFilePath = libraryFolder + "log.txt";
 		log = new File(logFilePath);
 		
 		if(!logDirectory.exists()){
@@ -108,12 +107,6 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 			}
 		}
 		
-		try{
-			fileWriter = new FileWriter(logFilePath,true); //the true will append the new data
-		}catch(IOException ioe){
-			System.err.println("IOException: " + ioe.getMessage());
-		}
-
 		consoleMessages = new JTextArea(35,60);
 		consoleMessages.setEditable(false);
 		consoleMessages.setFont(new java.awt.Font("Courier", 0, 12));
@@ -123,10 +116,10 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, BorderLayout.NORTH);
 		
+		printLineToFile("-------------------");
+		
 		currentFont = "Courier";
 		currentSize = 12;
-		EnterText("Font set to Courier.");
-		EnterText("Size of font set to 12.");
 		
 		EnterText("MATH QUIZ!!! Let's see how much you know...");
 		EnterText("To see a list of a commands, type /help or /?.");
@@ -142,10 +135,10 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		add(inputPanel, BorderLayout.SOUTH);
 		
 		addWindowFocusListener(new WindowAdapter() {
-		    public void windowGainedFocus(WindowEvent e) {
-		        input.requestFocusInWindow();
-		    }
-		});
+							   public void windowGainedFocus(WindowEvent e) {
+							   input.requestFocusInWindow();
+							   }
+							   });
 		
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
@@ -157,16 +150,23 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		pack();
 	}
 	
+	public static void printLineToFile(String txt){
+		
+		try {
+			FileWriter fileWriter = new FileWriter(logFilePath,true);
+			fileWriter.write(txt + "\n");
+			fileWriter.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
 	public static void EnterText(String input){
 		String currentValue = consoleMessages.getText();
 		String newValue = currentValue + input + "\n";
 		consoleMessages.setText(newValue);
 		LastLine1 = input;
-		try {
-			fileWriter.write(input + "\n");
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		printLineToFile(input);
 		
 	}
 	
@@ -190,7 +190,7 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 		
 		return argument;
 	}
-
+	
 	public static void newNumbers(){
 		
 		numberOfTimesPlayed += 1;
@@ -213,17 +213,17 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	
 	public static void nextQuestion(int numberOne, int numberTwo, int answer){
 		if (numberOfTimesPlayed <= 9){
-				if (total == answer){
-					EnterText("You are correct!");
-					score += 10;
-					
-					newNumbers();
-				} else {
-					EnterText("Wrong.");
-
-					newNumbers();
-
-				}
+			if (total == answer){
+				EnterText("You are correct!");
+				score += 10;
+				
+				newNumbers();
+			} else {
+				EnterText("Wrong.");
+				
+				newNumbers();
+				
+			}
 		} else {
 			
 			if (total == answer){
@@ -252,16 +252,10 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
 				EnterText("Please enter your difficulty: Elementary, Middle School, High School");
 				setQuestionState(DIFFICULTY_CHANGING_STATE);
-			
+				
 				input.selectAll();
 			} else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
 				EnterText("Quiting...");
-
-				try {
-					fileWriter.close();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
 				System.exit(0);
 			}else if(txtToLowerCase.equals("/clear")){
 				consoleMessages.setText("");
@@ -270,19 +264,19 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 				setQuestionState(0);
 			}else if (txtToLowerCase.contains("/setfont")){
 				String newFont = findCommandArgument("/setfont",txt);
-			
+				
 				input.setFont(new java.awt.Font(newFont, 0, currentSize));
 				consoleMessages.setFont(new java.awt.Font(newFont,0, currentSize));
 				currentFont = newFont;
-			
+				
 				EnterText("Font changed to " + newFont);
-			
+				
 				input.selectAll();
 				setQuestionState(0);
 			}else if(txtToLowerCase.contains("/say")){
 				String sayMessage = findCommandArgument("/say",txt);
 				EnterText(sayMessage);
-			
+				
 				input.selectAll();
 				setQuestionState(0);
 			}else if (txtToLowerCase.contains("/setsize")){
@@ -310,7 +304,26 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 				EnterText("/quit (or n): Disables the controls and requires you to quit the program.\n");
 				input.selectAll();
 				setQuestionState(0);
-			}else {
+			}else if(txtToLowerCase.equals("/debug")){
+				EnterText("");
+				EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
+				EnterText("MathQuizGame.number1             = " + number1);
+				EnterText("MathQuizGame.number2             = " + number2);
+				EnterText("MathQuizGame.total               = " + total);
+				EnterText("MathQuizGame.score               = " + score);
+				EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
+				EnterText("MathQuizGame.currentFont         = " + currentFont);
+				EnterText("MathQuizGame.currentSize         = " + currentSize);
+				EnterText("MathQuizGame.state               = " + state);
+				EnterText("");
+				EnterText("OS Name      = " + System.getProperty("os.name"));
+				EnterText("OS Verion    = " + System.getProperty("os.version"));
+				EnterText("Java Version = " + System.getProperty("java.version"));
+				EnterText("");
+
+			}
+			
+			else {
 				try{ 
 					int inputValue = Integer.parseInt(input.getText());
 					nextQuestion(number1, number2, inputValue);
@@ -324,57 +337,73 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 				setQuestionState(0);
 			}
 		}else if(state == DIFFICULTY_CHANGING_STATE){
-					switch (txtToLowerCase) {
-						case "elementary":
-							setDifficulty(ELEMENTARY_DIFFICULTY);
-							EnterText("Starting a new game set in the Elementary Difficulty.");
-							numberOfTimesPlayed = 1;
-							score = 0;
-							EnterText("Question #" + numberOfTimesPlayed);
-							number1 = generator.nextInt(11);
-							number2 = generator.nextInt(11);
-							total = number1 + number2;
-							input.requestFocusInWindow();
-							input.selectAll();
-							EnterText("What is " + number1 + " + " + number2 + "?");
-							setQuestionState(0);
-							break;
-						case "middle school":
-							setDifficulty(MIDDLE_SCHOOL_DIFFICULTY);
-							EnterText("Starting a new game set in the Middle School Difficulty.");
-							numberOfTimesPlayed = 1;
-							score = 0;
-							EnterText("Question #" + numberOfTimesPlayed);
-							number1 = generator.nextInt(11);
-							number2 = generator.nextInt(11);
-							total = number1 + number2;
-							EnterText("What is " + number1 + " + " + number2 + "?");
-							input.requestFocusInWindow();
-							input.selectAll();
-							setQuestionState(0);
-							break;
-						case "high school":
-							setDifficulty(HIGH_SCHOOL_DIFFICULTY);
-							EnterText("Starting a new game set in the High School Difficulty.");
-							numberOfTimesPlayed = 1;
-							score = 0;
-							EnterText("Question #" + numberOfTimesPlayed);
-							number1 = generator.nextInt(11);
-							number2 = generator.nextInt(11);
-							total = number1 + number2;
-							EnterText("What is " + number1 + " + " + number2 + "?");		
-							input.requestFocusInWindow();
-							input.selectAll();
-							setQuestionState(0);
-							break;
-						default:
-							EnterText("That is not available at the time. Please choose a difficulty level.");
-					}
+			if (txtToLowerCase.equals("elementary")) {
+				setDifficulty(ELEMENTARY_DIFFICULTY);
+				EnterText("Starting a new game set in the Elementary Difficulty.");
+				numberOfTimesPlayed = 1;
+				score = 0;
+				EnterText("Question #" + numberOfTimesPlayed);
+				number1 = generator.nextInt(11);
+				number2 = generator.nextInt(11);
+				total = number1 + number2;
+				input.requestFocusInWindow();
+				input.selectAll();
+				EnterText("What is " + number1 + " + " + number2 + "?");
+				setQuestionState(0);
+			}else if (txtToLowerCase.equals("middle school")){
+				setDifficulty(MIDDLE_SCHOOL_DIFFICULTY);
+				EnterText("Starting a new game set in the Middle School Difficulty.");
+				numberOfTimesPlayed = 1;
+				score = 0;
+				EnterText("Question #" + numberOfTimesPlayed);
+				number1 = generator.nextInt(11);
+				number2 = generator.nextInt(11);
+				total = number1 + number2;
+				EnterText("What is " + number1 + " + " + number2 + "?");
+				input.requestFocusInWindow();
+				input.selectAll();
+				setQuestionState(0);
+			}else if(txtToLowerCase.equals("high school")){
+				setDifficulty(HIGH_SCHOOL_DIFFICULTY);
+				EnterText("Starting a new game set in the High School Difficulty.");
+				numberOfTimesPlayed = 1;
+				score = 0;
+				EnterText("Question #" + numberOfTimesPlayed);
+				number1 = generator.nextInt(11);
+				number2 = generator.nextInt(11);
+				total = number1 + number2;
+				EnterText("What is " + number1 + " + " + number2 + "?");		
+				input.requestFocusInWindow();
+				input.selectAll();
+				setQuestionState(0);
+			}else if(txtToLowerCase.equals("/debug")){
+				EnterText("");
+				EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
+				EnterText("MathQuizGame.number1             = " + number1);
+				EnterText("MathQuizGame.number2             = " + number2);
+				EnterText("MathQuizGame.total               = " + total);
+				EnterText("MathQuizGame.score               = " + score);
+				EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
+				EnterText("MathQuizGame.currentFont         = " + currentFont);
+				EnterText("MathQuizGame.currentSize         = " + currentSize);
+				EnterText("MathQuizGame.state               = " + state);
+				EnterText("");
+				EnterText("OS Name      = " + System.getProperty("os.name"));
+				EnterText("OS Verion    = " + System.getProperty("os.version"));
+				EnterText("Java Version = " + System.getProperty("java.version"));
+				EnterText("");
+				
+			}else{
+				EnterText("That is not available at the time. Please choose a difficulty level.");
+				input.requestFocusInWindow();
+				input.selectAll();
+				setQuestionState(1);
+			}
 		}else{
 			EnterText("Error: State not defined. Please report this bug to http://sourceforge.net/projects/mathquizgame/tickets/");
 		}
 	}
-
+	
 	public void actionPerformed(ActionEvent actionEvent) {
 		somethingHappened();
 		
@@ -391,11 +420,11 @@ public class MathTest extends JFrame implements ActionListener, KeyListener{
 	public void keyReleased(KeyEvent e){
 		
 	}
-
+	
 	public static void main(String[] args) {
 		
-		new MathTest();
-
+		new MathQuizGame();
+		
 	}
-
+	
 }
