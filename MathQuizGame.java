@@ -4,8 +4,11 @@
  */
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -114,14 +117,19 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		consoleMessages.setWrapStyleWord(true);
 		scrollPane = new JScrollPane(consoleMessages);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		add(scrollPane, BorderLayout.PAGE_START);
+		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+			 public void adjustmentValueChanged(AdjustmentEvent e) {  
+				e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+			}
+		});
+		add(scrollPane, BorderLayout.CENTER);
 		
 		printLineToFile("-------------------");
 		
 		currentFont = "Courier";
 		currentSize = 12;
 		
-		EnterText("MATH QUIZ!!! Let's see how much you know...");
+		EnterText("MATH QUIZ!!! Let's see how much you know...",true);
 		EnterText("To see a list of a commands, type /help or /?.");
 		
 		input = new JTextField(35);
@@ -130,6 +138,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		enter = new JButton("Enter");
 		enter.addActionListener(this);
 		input.addKeyListener(this);
+		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.LINE_AXIS));
 		inputPanel.add(input);
 		inputPanel.add(enter);
 		add(inputPanel, BorderLayout.PAGE_END);
@@ -143,10 +152,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
 		
-
-		
 		setResizable(true);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setLocationRelativeTo(null);
 		pack();
@@ -164,12 +171,16 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public static void EnterText(String input){
-		String currentValue = consoleMessages.getText();
-		String newValue = currentValue + input + "\n";
-		consoleMessages.setText(newValue);
+		consoleMessages.append("\n" + input);
 		LastLine1 = input;
 		printLineToFile(input);
 		
+	}
+	
+	public static void EnterText(String input, boolean doNotAddNewLine){
+		consoleMessages.append(input);
+		LastLine1 = input;
+		printLineToFile(input);
 	}
 	
 	public static void setDifficulty(int newDifficulty){
@@ -213,9 +224,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("What is " + number1 + " + " + number2 + "?");
 	}
 	
-	public static void nextQuestion(int numberOne, int numberTwo, int answer){
+	public static void nextQuestion(int numberOne, int numberTwo, int userAnswer){
+		EnterText(" " + userAnswer,true);
+		printLineToFile("User\'s answer: " + userAnswer);
+		
 		if (numberOfTimesPlayed <= 9){
-			if (total == answer){
+			if (total == userAnswer){
 				EnterText("You are correct!");
 				score += 10;
 				
@@ -228,7 +242,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			}
 		} else {
 			
-			if (total == answer){
+			if (total == userAnswer){
 				EnterText("You are correct!");
 				score += 10;
 			}else{
@@ -248,7 +262,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		String txtToLowerCase;
 		txt = input.getText();
 		txtToLowerCase = txt.toLowerCase();
-		EnterText(txt);
 		
 		if (state == VARIABLE_STATE){
 			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
@@ -256,7 +269,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				setQuestionState(DIFFICULTY_CHANGING_STATE);
 				
 				input.selectAll();
-			} else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
+			}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
 				EnterText("Quiting...");
 				System.exit(0);
 			}else if(txtToLowerCase.equals("/clear")){
@@ -306,7 +319,22 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				EnterText("/quit (or n): Disables the controls and requires you to quit the program.\n");
 				input.selectAll();
 				setQuestionState(0);
-			}else if(txtToLowerCase.equals("/debug")){
+			}else if(txtToLowerCase.equals("/clearfile")){
+				if(log.delete()){
+					try {
+						if(log.createNewFile()){
+							EnterText("File cleared successfully!");
+						}
+					} catch (IOException ex) {
+						consoleMessages.append("\nError: File could not be recreated.");
+					}
+				}else{
+					EnterText("Error: File could not be cleared.");
+				}
+				input.selectAll();
+			}
+			
+			else if(txtToLowerCase.equals("/debug")){
 				EnterText("");
 				EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
 				EnterText("MathQuizGame.number1             = " + number1);
@@ -326,7 +354,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			}
 			
 			else {
-				try{ 
+				try{
 					int inputValue = Integer.parseInt(input.getText());
 					nextQuestion(number1, number2, inputValue);
 					input.requestFocusInWindow();
@@ -424,18 +452,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public static void main(String[] args) {
-		
-		try {
-            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-        } catch (InstantiationException ex) {
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
 		
 		new MathQuizGame();
 		
