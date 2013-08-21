@@ -15,6 +15,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Random;
 import javax.swing.*;
 
@@ -75,7 +77,17 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		LastLine1 = "";
 		
 		String userHome = System.getProperty("user.home");
-		String libraryFolder = userHome + "/Library/Application Support/mathquizgame/";
+		String libraryFolder;
+		OSValidator osFinder = new OSValidator();
+		String os = osFinder.findOS();
+		if (os.equals("mac")){
+			libraryFolder = userHome + "/Library/Application Support/mathquizgame/";
+		}else if (os.equals("windows")){
+			libraryFolder = userHome + "/AppData/mathquizgame/";
+		}else{
+			libraryFolder = userHome + "/.mathquizgame/";
+		}
+		
 		logDirectory = new File(libraryFolder);
 		logFilePath = libraryFolder + "log.txt";
 		log = new File(logFilePath);
@@ -117,7 +129,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		});
 		add(scrollPane, BorderLayout.CENTER);
 		
+		// Find date of 
+		Calendar cal = Calendar.getInstance();
+    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		String date = "" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE);
+		
 		printLineToFile("-------------------");
+		printLineToFile("Date of use: " + date);
+		printLineToFile("Time of use: " + sdf.format(cal.getTime()));
 		
 		currentFont = "Courier";
 		currentSize = 12;
@@ -352,7 +371,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public void keyTyped(KeyEvent e){
 		
 	}
-	
 	public void keyPressed(KeyEvent keyEvent){
 		if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
 			somethingHappened();
@@ -459,9 +477,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("MathQuizGame.currentFont         = " + currentFont);
 		EnterText("MathQuizGame.currentSize         = " + currentSize);
 		EnterText("MathQuizGame.state               = " + state);
+		EnterText("MathQuizGame.logFilePath         = " + logFilePath);
 		EnterText("");
 		EnterText("OS Name      = " + System.getProperty("os.name"));
 		EnterText("OS Verion    = " + System.getProperty("os.version"));
+		EnterText("User Home Directory: " + System.getProperty("user.home"));
 		EnterText("Java Version = " + System.getProperty("java.version"));
 		EnterText("");
 		input.selectAll();
