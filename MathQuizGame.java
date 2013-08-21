@@ -4,7 +4,6 @@
  */
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -16,13 +15,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -265,91 +258,23 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		
 		if (state == VARIABLE_STATE){
 			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
-				EnterText("Please enter your difficulty: Elementary, Middle School, High School");
-				setQuestionState(DIFFICULTY_CHANGING_STATE);
-				
-				input.selectAll();
+				restart();
 			}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
-				EnterText("Quiting...");
-				System.exit(0);
+				quit();
 			}else if(txtToLowerCase.equals("/clear")){
-				consoleMessages.setText("");
-				input.selectAll();
-				EnterText(LastLine1); 
-				setQuestionState(0);
+				clear();
 			}else if (txtToLowerCase.contains("/setfont")){
-				String newFont = findCommandArgument("/setfont",txt);
-				
-				input.setFont(new java.awt.Font(newFont, 0, currentSize));
-				consoleMessages.setFont(new java.awt.Font(newFont,0, currentSize));
-				currentFont = newFont;
-				
-				EnterText("Font changed to " + newFont);
-				
-				input.selectAll();
-				setQuestionState(0);
+				setfont(txt);
 			}else if(txtToLowerCase.contains("/say")){
-				String sayMessage = findCommandArgument("/say",txt);
-				EnterText(sayMessage);
-				
-				input.selectAll();
-				setQuestionState(0);
+				say(txt);
 			}else if (txtToLowerCase.contains("/setsize")){
-				String newSizeSTR = findCommandArgument("/setsize",txt);
-				try{
-					int newSize = Integer.parseInt(newSizeSTR);
-					input.setFont(new java.awt.Font(currentFont, 0, newSize));
-					consoleMessages.setFont(new java.awt.Font(currentFont, 0, newSize));
-					currentSize = newSize;
-					
-					EnterText("Size set to " + newSize);
-				}catch(NumberFormatException e){
-					EnterText("The new size has to be a number.");
-				}
-				
-				input.selectAll();
-				setQuestionState(0);
+				setsize(txt);
 			}else if (txtToLowerCase.equals("/help") || txtToLowerCase.equals("/?")){
-				EnterText("Here are all the available commands, their arguments, and what they do:\n");
-				EnterText("/clear: Clears the entire log except the last line that has been displayed.\n");
-				EnterText("/help (or /?): Displays all the available commands, their arguments, and what they do.\n");
-				EnterText("/restart (or y): Restarts the game and resets the score to 0.\n");
-				EnterText("/say <msg>: Displays the message you type.\n");
-				EnterText("/setfont <font>: Changes the font of the program to the font you choose. Note that the font is case-sensitive.\n");
-				EnterText("/quit (or n): Disables the controls and requires you to quit the program.\n");
-				input.selectAll();
-				setQuestionState(0);
+				help();
 			}else if(txtToLowerCase.equals("/clearfile")){
-				if(log.delete()){
-					try {
-						if(log.createNewFile()){
-							EnterText("File cleared successfully!");
-						}
-					} catch (IOException ex) {
-						consoleMessages.append("\nError: File could not be recreated.");
-					}
-				}else{
-					EnterText("Error: File could not be cleared.");
-				}
-				input.selectAll();
-			}
-			
-			else if(txtToLowerCase.equals("/debug")){
-				EnterText("");
-				EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
-				EnterText("MathQuizGame.number1             = " + number1);
-				EnterText("MathQuizGame.number2             = " + number2);
-				EnterText("MathQuizGame.total               = " + total);
-				EnterText("MathQuizGame.score               = " + score);
-				EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
-				EnterText("MathQuizGame.currentFont         = " + currentFont);
-				EnterText("MathQuizGame.currentSize         = " + currentSize);
-				EnterText("MathQuizGame.state               = " + state);
-				EnterText("");
-				EnterText("OS Name      = " + System.getProperty("os.name"));
-				EnterText("OS Verion    = " + System.getProperty("os.version"));
-				EnterText("Java Version = " + System.getProperty("java.version"));
-				EnterText("");
+				clearfile();
+			}else if(txtToLowerCase.equals("/debug")){
+				debug();
 
 			}
 			
@@ -407,21 +332,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				input.selectAll();
 				setQuestionState(0);
 			}else if(txtToLowerCase.equals("/debug")){
-				EnterText("");
-				EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
-				EnterText("MathQuizGame.number1             = " + number1);
-				EnterText("MathQuizGame.number2             = " + number2);
-				EnterText("MathQuizGame.total               = " + total);
-				EnterText("MathQuizGame.score               = " + score);
-				EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
-				EnterText("MathQuizGame.currentFont         = " + currentFont);
-				EnterText("MathQuizGame.currentSize         = " + currentSize);
-				EnterText("MathQuizGame.state               = " + state);
-				EnterText("");
-				EnterText("OS Name      = " + System.getProperty("os.name"));
-				EnterText("OS Verion    = " + System.getProperty("os.version"));
-				EnterText("Java Version = " + System.getProperty("java.version"));
-				EnterText("");
+				debug();
 				
 			}else{
 				EnterText("That is not available at the time. Please choose a difficulty level.");
@@ -455,6 +366,105 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		
 		new MathQuizGame();
 		
+	}
+	
+	public static void restart(){
+		EnterText("Please enter your difficulty: Elementary, Middle School, High School");
+		setQuestionState(DIFFICULTY_CHANGING_STATE);
+				
+		input.selectAll();
+	}
+	public static void quit(){
+		EnterText("Quiting...");
+		System.exit(0);
+	}
+	public static void clear(){
+		consoleMessages.setText("");
+		input.selectAll();
+		EnterText(LastLine1); 
+		setQuestionState(0);
+	}
+	public static void setfont(String txt){
+		String newFont = findCommandArgument("/setfont",txt);
+				
+		input.setFont(new java.awt.Font(newFont, 0, currentSize));
+		consoleMessages.setFont(new java.awt.Font(newFont,0, currentSize));
+		currentFont = newFont;
+				
+		EnterText("Font changed to " + newFont);
+				
+		input.selectAll();
+		setQuestionState(0);
+	}
+	public static void say(String txt){
+		String sayMessage = findCommandArgument("/say",txt);
+		EnterText(sayMessage);
+				
+		input.selectAll();
+		setQuestionState(0);
+	}
+	public static void setsize(String txt){
+		String newSizeSTR = findCommandArgument("/setsize",txt);
+		try{
+			int newSize = Integer.parseInt(newSizeSTR);
+			input.setFont(new java.awt.Font(currentFont, 0, newSize));
+			consoleMessages.setFont(new java.awt.Font(currentFont, 0, newSize));
+			currentSize = newSize;
+					
+			EnterText("Size set to " + newSize);
+		}catch(NumberFormatException e){
+			EnterText("The new size has to be a number.");
+		}
+		input.selectAll();
+		setQuestionState(0);
+	}
+	public static void help(){
+		EnterText("\nHere are all the available commands, their arguments, and what they do:");
+		EnterText("/clear: Clears the entire log except the last line that has been displayed.");
+		EnterText("/clearfile: Clears text in " + logFilePath);
+		EnterText("/debug: Shows technical information you wouldn't understand if you're not a programmer.");
+		EnterText("/help (or /?): Displays all the available commands, their arguments, and what they do.");
+		EnterText("/restart (or y): Restarts the game and resets the score to 0.");
+		EnterText("/say <msg>: Displays the message you type.");
+		EnterText("/setfont <font>: Changes the font of the program to the font you choose.");
+		EnterText("/setsize <size>: Changes the size of the program to the size you choose. Note that the size must be a number.");
+		EnterText("/quit (or n): Disables the controls and requires you to quit the program.");
+		EnterText("\n");
+		input.selectAll();
+		setQuestionState(0);
+	}
+	public static void clearfile(){
+		if(log.delete()){
+			try {
+				if(log.createNewFile()){
+					EnterText("File cleared successfully!");
+				}
+			} catch (IOException ex) {
+				consoleMessages.append("\nError: File could not be recreated.");
+			}
+		}else{
+			EnterText("Error: File could not be cleared.");
+		}
+		input.selectAll();
+		setQuestionState(0);
+	}
+	public static void debug(){
+		EnterText("");
+		EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
+		EnterText("MathQuizGame.number1             = " + number1);
+		EnterText("MathQuizGame.number2             = " + number2);
+		EnterText("MathQuizGame.total               = " + total);
+		EnterText("MathQuizGame.score               = " + score);
+		EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
+		EnterText("MathQuizGame.currentFont         = " + currentFont);
+		EnterText("MathQuizGame.currentSize         = " + currentSize);
+		EnterText("MathQuizGame.state               = " + state);
+		EnterText("");
+		EnterText("OS Name      = " + System.getProperty("os.name"));
+		EnterText("OS Verion    = " + System.getProperty("os.version"));
+		EnterText("Java Version = " + System.getProperty("java.version"));
+		EnterText("");
+		input.selectAll();
 	}
 	
 }
