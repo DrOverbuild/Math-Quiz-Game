@@ -332,8 +332,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				numberOfTimesPlayed = 1;
 				score = 0;
 				EnterText("Question #" + numberOfTimesPlayed);
-				number1 = generator.nextInt(11);
-				number2 = generator.nextInt(11);
+				number1 = generator.nextInt(21);
+				number2 = generator.nextInt(21);
 				total = number1 + number2;
 				EnterText("What is " + number1 + " + " + number2 + "?");
 				input.requestFocusInWindow();
@@ -345,8 +345,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				numberOfTimesPlayed = 1;
 				score = 0;
 				EnterText("Question #" + numberOfTimesPlayed);
-				number1 = generator.nextInt(11);
-				number2 = generator.nextInt(11);
+				number1 = generator.nextInt(41)-20;
+				number2 = generator.nextInt(41)-20;
 				total = number1 + number2;
 				EnterText("What is " + number1 + " + " + number2 + "?");		
 				input.requestFocusInWindow();
