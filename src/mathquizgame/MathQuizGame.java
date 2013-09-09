@@ -45,19 +45,22 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static int difficultyLevel;
 	static String currentFont;
 	static int currentSize;
+	
+	// Fields for File management
 	static File logDirectory;
 	static File log;
 	static String logFilePath;
+	
+	// Fields for custom difficulty level
+	static int customMaxRange;
+	static int customMinRange;
+	static char customOperation;
 	
 	// This field stores what the program
 	// is waiting for when it waits for 
 	// user input.
 	static int state;
-	
-	// Difficulty fields
-	public static final int ELEMENTARY_DIFFICULTY = 0;
-	public static final int MIDDLE_SCHOOL_DIFFICULTY = 1;
-	public static final int HIGH_SCHOOL_DIFFICULTY = 2;
+
 	// State fields
 	public static final int VARIABLE_STATE = 0;
 	public static final int DIFFICULTY_CHANGING_STATE = 1;
@@ -80,12 +83,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		
 		String userHome = System.getProperty("user.home");
 		String libraryFolder;
-		OSValidator osFinder = new OSValidator();
-		String os = osFinder.findOS();
+		String os = OSValidator.findOS();
 		if (os.equals("mac")){
 			libraryFolder = userHome + "/Library/Application Support/mathquizgame/";
 		}else if (os.equals("windows")){
-			libraryFolder = userHome + "/AppData/mathquizgame/";
+			libraryFolder = userHome + "\\Application Data\\mathquizgame\\";
 		}else{
 			libraryFolder = userHome + "/.mathquizgame/";
 		}
@@ -163,7 +165,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 							   }
 							   });
 		
-		EnterText("Please enter your difficulty: Elementary, Middle School, High School");
+		EnterText("Please enter your difficulty: Elementary, Middle School, High School, or Custom");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
 		
 		setResizable(true);
@@ -205,9 +207,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		state = newState;
 	}
 	
-	public static String findCommandArgument(String command, String userInput){
-		
-		// This command will only find one argument.
+	public static String[] findCommandArguments(String command, String userInput){
 		
 		int lengthOfCommand = command.length() + 1;
 		int lengthOfUserInput = userInput.length();
@@ -215,7 +215,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		char[] toCharArray = userInput.toCharArray();
 		String argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
 		
-		return argument;
+		String[] splitted = argument.split("\\s");
+		
+		return splitted;
 	}
 	
 	public static void newNumbers(){
@@ -232,7 +234,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		} else if (difficultyLevel == 2) {
 			number1 = generator.nextInt(41) - 20;
 			number2 = generator.nextInt(41) - 20;
-		}
+		}else
 		
 		total= number1 + number2;
 		EnterText("What is " + number1 + " + " + number2 + "?");
@@ -240,7 +242,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	
 	public static void nextQuestion(int numberOne, int numberTwo, int userAnswer){
 		EnterText(" " + userAnswer,true);
-		printLineToFile("User\'s answer: " + userAnswer);
 		
 		if (numberOfTimesPlayed <= 9){
 			if (total == userAnswer){
@@ -302,7 +303,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			else {
 				try{
 					int inputValue = Integer.parseInt(input.getText());
-					nextQuestion(number1, number2, inputValue);
+					EnterText(" " + txt,true);
+					MathOperator.operate(inputValue);
+					//nextQuestion(number1, number2, inputValue);
 					input.requestFocusInWindow();
 					input.selectAll();
 				} catch (NumberFormatException e){
@@ -313,48 +316,50 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				setQuestionState(0);
 			}
 		}else if(state == DIFFICULTY_CHANGING_STATE){
-			if (txtToLowerCase.equals("elementary")) {
-				setDifficulty(ELEMENTARY_DIFFICULTY);
-				EnterText("Starting a new game set in the Elementary Difficulty.");
-				numberOfTimesPlayed = 1;
-				score = 0;
-				EnterText("Question #" + numberOfTimesPlayed);
-				number1 = generator.nextInt(11);
-				number2 = generator.nextInt(11);
-				total = number1 + number2;
-				input.requestFocusInWindow();
-				input.selectAll();
-				EnterText("What is " + number1 + " + " + number2 + "?");
-				setQuestionState(0);
-			}else if (txtToLowerCase.equals("middle school")){
-				setDifficulty(MIDDLE_SCHOOL_DIFFICULTY);
-				EnterText("Starting a new game set in the Middle School Difficulty.");
-				numberOfTimesPlayed = 1;
-				score = 0;
-				EnterText("Question #" + numberOfTimesPlayed);
-				number1 = generator.nextInt(21);
-				number2 = generator.nextInt(21);
-				total = number1 + number2;
-				EnterText("What is " + number1 + " + " + number2 + "?");
-				input.requestFocusInWindow();
-				input.selectAll();
-				setQuestionState(0);
-			}else if(txtToLowerCase.equals("high school")){
-				setDifficulty(HIGH_SCHOOL_DIFFICULTY);
-				EnterText("Starting a new game set in the High School Difficulty.");
-				numberOfTimesPlayed = 1;
-				score = 0;
-				EnterText("Question #" + numberOfTimesPlayed);
-				number1 = generator.nextInt(41)-20;
-				number2 = generator.nextInt(41)-20;
-				total = number1 + number2;
-				EnterText("What is " + number1 + " + " + number2 + "?");		
-				input.requestFocusInWindow();
-				input.selectAll();
-				setQuestionState(0);
-			}else if(txtToLowerCase.equals("/debug")){
+			if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
+				MathOperator.startGameElementary();
+			}else if (txtToLowerCase.equals("middle school") || txtToLowerCase.equals("m")){
+				MathOperator.startGameMiddle();
+			}else if(txtToLowerCase.equals("high school") || txtToLowerCase.equals("h")){
+				MathOperator.startGameHigh();
+			}else if(txtToLowerCase.equals("/debug") ){
 				debug();
 				
+			}else if(txtToLowerCase.equals("custom") || txtToLowerCase.equals("c")){
+				EnterText("----------------------");
+				EnterText("When choosing custom, please specify the maximum number, minimum number, and operation to use. Example:");
+				EnterText("custom 50 10 *");
+				EnterText("OR: c 50 10 *");
+				EnterText("While 50 is the maximum, 10 is the minimum, and * is the operation to use.");
+				EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"*\" (multiply)");
+				setQuestionState(1);
+			}else if (txtToLowerCase.contains("custom ") || txtToLowerCase.contains("c ")){
+				String[] customArgs;
+				if(txtToLowerCase.contains("custom")){
+					customArgs = findCommandArguments("custom",txt);
+				}else{
+					customArgs = findCommandArguments("c",txt);
+				}
+				MathOperator.startGameCustom(customArgs);
+			}else if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
+				restart();
+			}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
+				quit();
+			}else if(txtToLowerCase.equals("/clear")){
+				clear();
+			}else if (txtToLowerCase.contains("/setfont")){
+				setfont(txt);
+			}else if(txtToLowerCase.contains("/say")){
+				say(txt);
+			}else if (txtToLowerCase.contains("/setsize")){
+				setsize(txt);
+			}else if (txtToLowerCase.equals("/help") || txtToLowerCase.equals("/?")){
+				help();
+			}else if(txtToLowerCase.equals("/clearfile")){
+				clearfile();
+			}else if(txtToLowerCase.equals("/debug")){
+				debug();
+
 			}else{
 				EnterText("That is not available at the time. Please choose a difficulty level.");
 				input.requestFocusInWindow();
@@ -389,7 +394,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public static void restart(){
-		EnterText("Please enter your difficulty: Elementary, Middle School, High School");
+		EnterText("Please enter your difficulty: Elementary, Middle School, High School, or Custom");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
 				
 		input.selectAll();
@@ -405,8 +410,10 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		setQuestionState(0);
 	}
 	public static void setfont(String txt){
-		String newFont = findCommandArgument("/setfont",txt);
-				
+		String[] newFontAsArray = findCommandArguments("/setfont",txt);
+		
+		String newFont = newFontAsArray[0];
+		
 		input.setFont(new java.awt.Font(newFont, 0, currentSize));
 		consoleMessages.setFont(new java.awt.Font(newFont,0, currentSize));
 		currentFont = newFont;
@@ -417,14 +424,21 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		setQuestionState(0);
 	}
 	public static void say(String txt){
-		String sayMessage = findCommandArgument("/say",txt);
+		String[] sayMessageAsArray = findCommandArguments("/say",txt);
+		String sayMessage = "";
+		
+		for(int x=0;x<sayMessageAsArray.length;x++){
+			sayMessage = sayMessage + sayMessageAsArray[x] + " ";
+		}
+		
 		EnterText(sayMessage);
 				
 		input.selectAll();
 		setQuestionState(0);
 	}
 	public static void setsize(String txt){
-		String newSizeSTR = findCommandArgument("/setsize",txt);
+		String[] newSizeSTRAsArray = findCommandArguments("/setsize",txt);
+		String newSizeSTR = newSizeSTRAsArray[0];
 		try{
 			int newSize = Integer.parseInt(newSizeSTR);
 			input.setFont(new java.awt.Font(currentFont, 0, newSize));
