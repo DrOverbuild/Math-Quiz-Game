@@ -54,7 +54,7 @@ public class MathOperator {
 				EnterText("You are correct!");
 				MathQuizGame.score += 10;
 			}else{
-				EnterText("Wrong. Correct Answer: " + MathQuizGame.score);
+				EnterText("Wrong. Correct Answer: " + MathQuizGame.total);
 			}
 			
 			EnterText("You are finished with your quiz.");
@@ -163,6 +163,9 @@ public class MathOperator {
 	private static void resetFields(){
 		MathQuizGame.numberOfTimesPlayed = 1;
 		MathQuizGame.score = 0;
+		MathQuizGame.total = 0;
+		MathQuizGame.number1 = 0;
+		MathQuizGame.number2 = 0;
 	}
 	
 	private static char randomOp(char op1, char op2, char op3, char op4){

@@ -75,7 +75,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	
 	
 	public MathQuizGame() {
-		super("Math Quiz");
+		super("MathQuizGame");
 		BorderLayout b33 = new BorderLayout(5,5);
 		setLayout(b33);
 		
@@ -97,25 +97,25 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		log = new File(logFilePath);
 		
 		if(!logDirectory.exists()){
-			System.out.println("Directory " + libraryFolder + " does not exist.");
-			System.out.println("Creating new directory...");
+			consoleMessages.append("Directory " + libraryFolder + " does not exist." + "\n");
+			consoleMessages.append("Creating new directory..." + "\n");
 			try{
 				boolean wasCreated = logDirectory.mkdir();
-				System.out.println("Directory created successfully");
+				consoleMessages.append("Directory created successfully" + "\n");
 			}catch(SecurityException e){
-				System.out.println("SecurityException");
+				consoleMessages.append("SecurityException" + "\n");
 			}
 		}
 		if(!log.exists()){
-			System.out.println("log.txt does not exist.");
-			System.out.println("Creating the file...");
+			consoleMessages.append("log.txt does not exist." + "\n");
+			consoleMessages.append("Creating the file...");
 			try{
 				boolean doesExist = log.createNewFile();
-				System.out.println("File created successfully.");
+				EnterText("File created successfully.");
 			}catch(SecurityException e){
-				System.out.println("SecurityException");
+				consoleMessages.append("\n" + "Error: You do not have permission to write files.");
 			}catch(IOException otherE){
-				otherE.printStackTrace();
+				consoleMessages.append("\n" + "Error: Cannot create file.");
 			}
 		}
 		
