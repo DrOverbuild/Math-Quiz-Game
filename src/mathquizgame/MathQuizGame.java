@@ -219,6 +219,18 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		
 		return splitted;
 	}
+	public static String findCommandArgument(String command, String userInput){
+		
+		// This command will only find one argument.
+		
+		int lengthOfCommand = command.length() + 1;
+		int lengthOfUserInput = userInput.length();
+		int lengthOfArgument = lengthOfUserInput - lengthOfCommand;
+		char[] toCharArray = userInput.toCharArray();
+		String argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
+		
+		return argument;
+	}
 	
 	public static void newNumbers(){
 		
@@ -410,9 +422,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		setQuestionState(0);
 	}
 	public static void setfont(String txt){
-		String[] newFontAsArray = findCommandArguments("/setfont",txt);
-		
-		String newFont = newFontAsArray[0];
+		String newFont = findCommandArgument("/setfont",txt);
 		
 		input.setFont(new java.awt.Font(newFont, 0, currentSize));
 		consoleMessages.setFont(new java.awt.Font(newFont,0, currentSize));
@@ -424,12 +434,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		setQuestionState(0);
 	}
 	public static void say(String txt){
-		String[] sayMessageAsArray = findCommandArguments("/say",txt);
-		String sayMessage = "";
-		
-		for(int x=0;x<sayMessageAsArray.length;x++){
-			sayMessage = sayMessage + sayMessageAsArray[x] + " ";
-		}
+		String sayMessage = findCommandArgument("/say",txt);
 		
 		EnterText(sayMessage);
 				
@@ -437,8 +442,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		setQuestionState(0);
 	}
 	public static void setsize(String txt){
-		String[] newSizeSTRAsArray = findCommandArguments("/setsize",txt);
-		String newSizeSTR = newSizeSTRAsArray[0];
+		String newSizeSTR = findCommandArgument("/setsize",txt);
 		try{
 			int newSize = Integer.parseInt(newSizeSTR);
 			input.setFont(new java.awt.Font(currentFont, 0, newSize));
