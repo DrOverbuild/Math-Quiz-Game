@@ -81,6 +81,20 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		
 		LastLine1 = "";
 		
+		consoleMessages = new JTextArea(20,60);
+		consoleMessages.setEditable(false);
+		consoleMessages.setFont(new java.awt.Font("Courier", 0, 12));
+		consoleMessages.setLineWrap(true);
+		consoleMessages.setWrapStyleWord(true);
+		scrollPane = new JScrollPane(consoleMessages);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+			 public void adjustmentValueChanged(AdjustmentEvent e) {  
+				e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+			}
+		});
+		add(scrollPane, BorderLayout.CENTER);
+		
 		String userHome = System.getProperty("user.home");
 		String libraryFolder;
 		String os = OSValidator.findOS();
@@ -97,41 +111,19 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		log = new File(logFilePath);
 		
 		if(!logDirectory.exists()){
-			consoleMessages.append("Directory " + libraryFolder + " does not exist." + "\n");
-			consoleMessages.append("Creating new directory..." + "\n");
 			try{
 				boolean wasCreated = logDirectory.mkdir();
-				consoleMessages.append("Directory created successfully" + "\n");
 			}catch(SecurityException e){
-				consoleMessages.append("SecurityException" + "\n");
 			}
 		}
 		if(!log.exists()){
-			consoleMessages.append("log.txt does not exist." + "\n");
-			consoleMessages.append("Creating the file...");
 			try{
-				boolean doesExist = log.createNewFile();
-				EnterText("File created successfully.");
+				boolean wasCreated = log.createNewFile();
+				EnterText("File " + logFilePath + " created successfully.",true);
 			}catch(SecurityException e){
-				consoleMessages.append("\n" + "Error: You do not have permission to write files.");
 			}catch(IOException otherE){
-				consoleMessages.append("\n" + "Error: Cannot create file.");
 			}
 		}
-		
-		consoleMessages = new JTextArea(20,60);
-		consoleMessages.setEditable(false);
-		consoleMessages.setFont(new java.awt.Font("Courier", 0, 12));
-		consoleMessages.setLineWrap(true);
-		consoleMessages.setWrapStyleWord(true);
-		scrollPane = new JScrollPane(consoleMessages);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
-			 public void adjustmentValueChanged(AdjustmentEvent e) {  
-				e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-			}
-		});
-		add(scrollPane, BorderLayout.CENTER);
 		
 		// Find date of 
 		Calendar cal = Calendar.getInstance();
@@ -145,7 +137,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		currentFont = "Courier";
 		currentSize = 12;
 		
-		EnterText("MATH QUIZ!!! Let's see how much you know...",true);
+		EnterText("MATH QUIZ!!! Let's see how much you know...");
 		EnterText("To see a list of a commands, type /help or /?.");
 		
 		input = new JTextField(35);
