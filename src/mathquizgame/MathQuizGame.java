@@ -88,11 +88,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		consoleMessages.setWrapStyleWord(true);
 		scrollPane = new JScrollPane(consoleMessages);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
-			 public void adjustmentValueChanged(AdjustmentEvent e) {  
-				e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-			}
-		});
+		//scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+		//	 public void adjustmentValueChanged(AdjustmentEvent e) {  
+		//		e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+		//	}
+		//});
 		add(scrollPane, BorderLayout.CENTER);
 		
 		String userHome = System.getProperty("user.home");
@@ -179,14 +179,16 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public static void EnterText(String input){
-		consoleMessages.append("\n" + input);
+		String str = consoleMessages.getText() + "\n" + input;
+		consoleMessages.setText(str);
 		LastLine1 = input;
 		printLineToFile(input);
 		
 	}
 	
 	public static void EnterText(String input, boolean doNotAddNewLine){
-		consoleMessages.append(input);
+		String str = consoleMessages.getText() + input;
+		consoleMessages.setText(str);
 		LastLine1 = input;
 		printLineToFile(input);
 	}
@@ -222,57 +224,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		String argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
 		
 		return argument;
-	}
-	
-	public static void newNumbers(){
-		
-		numberOfTimesPlayed += 1;
-		EnterText("Question #" + numberOfTimesPlayed);
-		
-		if (difficultyLevel == 0){
-			number1 = generator.nextInt(11);
-			number2 = generator.nextInt(11);
-		} else if (difficultyLevel == 1){
-			number1 = generator.nextInt(21);
-			number2 = generator.nextInt(21);
-		} else if (difficultyLevel == 2) {
-			number1 = generator.nextInt(41) - 20;
-			number2 = generator.nextInt(41) - 20;
-		}else
-		
-		total= number1 + number2;
-		EnterText("What is " + number1 + " + " + number2 + "?");
-	}
-	
-	public static void nextQuestion(int numberOne, int numberTwo, int userAnswer){
-		EnterText(" " + userAnswer,true);
-		
-		if (numberOfTimesPlayed <= 9){
-			if (total == userAnswer){
-				EnterText("You are correct!");
-				score += 10;
-				
-				newNumbers();
-			} else {
-				EnterText("Wrong.");
-				
-				newNumbers();
-				
-			}
-		} else {
-			
-			if (total == userAnswer){
-				EnterText("You are correct!");
-				score += 10;
-			}else{
-				EnterText("Wrong.");
-			}
-			
-			EnterText("You are finished with your quiz.");
-			EnterText("Here's your score: " + score + "%");
-			
-			EnterText("Play again? (Y/N)");
-		}
 	}
 	
 	public void somethingHappened(){
@@ -411,7 +362,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		consoleMessages.setText("");
 		input.selectAll();
 		EnterText(LastLine1); 
-		setQuestionState(0);
 	}
 	public static void setfont(String txt){
 		String newFont = findCommandArgument("/setfont",txt);
@@ -423,7 +373,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("Font changed to " + newFont);
 				
 		input.selectAll();
-		setQuestionState(0);
 	}
 	public static void say(String txt){
 		String sayMessage = findCommandArgument("/say",txt);
@@ -431,7 +380,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText(sayMessage);
 				
 		input.selectAll();
-		setQuestionState(0);
 	}
 	public static void setsize(String txt){
 		String newSizeSTR = findCommandArgument("/setsize",txt);
@@ -446,7 +394,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			EnterText("The new size has to be a number.");
 		}
 		input.selectAll();
-		setQuestionState(0);
 	}
 	public static void help(){
 		EnterText("\nHere are all the available commands, their arguments, and what they do:");
@@ -461,7 +408,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("/quit (or n): Disables the controls and requires you to quit the program.");
 		EnterText("\n");
 		input.selectAll();
-		setQuestionState(0);
 	}
 	public static void clearfile(){
 		if(log.delete()){
@@ -476,7 +422,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			EnterText("Error: File could not be cleared.");
 		}
 		input.selectAll();
-		setQuestionState(0);
 	}
 	public static void debug(){
 		EnterText("");
