@@ -43,7 +43,7 @@ public class MathOperator {
 				
 				newNumbers();
 			} else {
-				EnterText("Wrong. Correct Answer: " + MathQuizGame.score);
+				EnterText("Wrong. Correct Answer: " + MathQuizGame.total);
 				
 				newNumbers();
 				
