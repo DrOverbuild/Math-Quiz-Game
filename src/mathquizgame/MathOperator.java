@@ -104,13 +104,24 @@ public class MathOperator {
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
 	}
-	public static void startGameCustom(String[] customArgs){
+	public static void startGameCustom(String[] customArgs) throws NumbersAreSameException{
 		resetFields();
 		setDifficulty(CUSTOM_DIFFICULTY);
 		EnterText("Starting a new game set in the Custom Difficulty.");
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
-		customMaxRange = Integer.parseInt(customArgs[0]);
-		customMinRange = Integer.parseInt(customArgs[1]);
+		
+		int maxRangeLocal = Integer.parseInt(customArgs[0]);
+		int minRangeLocal = Integer.parseInt(customArgs[1]);
+		
+		if(maxRangeLocal < minRangeLocal){
+			customMaxRange = minRangeLocal;
+			customMinRange = maxRangeLocal;
+		}else if (maxRangeLocal > minRangeLocal){
+			customMaxRange = maxRangeLocal;
+			customMinRange = minRangeLocal;
+		}else if (maxRangeLocal == minRangeLocal){
+			throw new NumbersAreSameException("Numbers cannot be same.");
+		}
 		char[] customOperationArray = customArgs[2].toCharArray();
 		customOperation = customOperationArray[0];
 		GenerateNewNumbers(3);

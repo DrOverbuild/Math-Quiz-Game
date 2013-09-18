@@ -110,15 +110,17 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		logFilePath = libraryFolder + "log.txt";
 		log = new File(logFilePath);
 		
+		boolean wasCreated = false;
+		
 		if(!logDirectory.exists()){
 			try{
-				boolean wasCreated = logDirectory.mkdir();
+				wasCreated = logDirectory.mkdir();
 			}catch(SecurityException e){
 			}
 		}
 		if(!log.exists()){
 			try{
-				boolean wasCreated = log.createNewFile();
+				wasCreated = log.createNewFile();
 				EnterText("File " + logFilePath + " created successfully.",true);
 			}catch(SecurityException e){
 			}catch(IOException otherE){
@@ -136,8 +138,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		
 		currentFont = "Courier";
 		currentSize = 12;
-		
-		EnterText("MATH QUIZ!!! Let's see how much you know...");
+		if (!wasCreated){
+			EnterText("MATH QUIZ!!! Let's see how much you know...",true);
+		} else{
+			EnterText("MATH QUIZ!!! Let's see how much you know...");
+		}
 		EnterText("To see a list of a commands, type /help or /?.");
 		
 		input = new JTextField(35);
@@ -295,7 +300,13 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				}else{
 					customArgs = findCommandArguments("c",txt);
 				}
-				MathOperator.startGameCustom(customArgs);
+				try{
+					MathOperator.startGameCustom(customArgs);
+				}catch(NumbersAreSameException e){
+					EnterText("The numbers used in the range must not be the same. Please pick different ones.");
+					setQuestionState(1);
+					input.selectAll();
+				}
 			}else if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
 				restart();
 			}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
