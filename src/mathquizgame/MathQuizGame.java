@@ -38,7 +38,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static int number1;
 	static int number2;
 	static int total;
-	static float score;
+	static int score;
 	static Random generator = new Random();
 	static JButton enter;
 	static String LastLine1;
@@ -287,13 +287,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				
 			}else if(txtToLowerCase.equals("custom") || txtToLowerCase.equals("c")){
 				EnterText("----------------------");
-				EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
-				EnterText("custom 50 10 * 10");
-				EnterText("OR: c 50 10 * 10");
-				EnterText("While 50 is the maximum, 10 is the minimum, * is the operation to use, and the game will ask 10 questions.");
+				EnterText("When choosing custom, please specify the maximum number, minimum number, and operation to use. Example:");
+				EnterText("custom 50 10 *");
+				EnterText("OR: c 50 10 *");
+				EnterText("While 50 is the maximum, 10 is the minimum, and * is the operation to use.");
 				EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"*\" (multiply)");
 				setQuestionState(1);
-				input.selectAll();
 			}else if (txtToLowerCase.contains("custom ") || txtToLowerCase.contains("c ")){
 				String[] customArgs;
 				if(txtToLowerCase.contains("custom")){
@@ -447,13 +446,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("MathQuizGame.currentSize         = " + currentSize);
 		EnterText("MathQuizGame.state               = " + state);
 		EnterText("MathQuizGame.logFilePath         = " + logFilePath);
-		EnterText("");
-		EnterText("MathOperator.operationToUse            = " + MathOperator.operationToUse);
-		EnterText("MathOperator.numberOfTimesWillBePlayed = " + MathOperator.numberOfTimesWillBePlayed);
-		EnterText("MathOperator.pointsWorth               = " + MathOperator.pointsWorth);
-		EnterText("MathOperator.customMinRange            = " + MathOperator.customMinRange);
-		EnterText("MathOperator.customMaxRange            = " + MathOperator.customMaxRange);
-		EnterText("MathOperator.customOperation           = " + MathOperator.operationToUse);
 		EnterText("");
 		EnterText("OS Name      = " + System.getProperty("os.name"));
 		EnterText("OS Verion    = " + System.getProperty("os.version"));

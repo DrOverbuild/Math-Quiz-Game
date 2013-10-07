@@ -17,8 +17,6 @@ public class MathOperator {
 	static int number1;
 	static int number2;
 	static char operationToUse;
-	static int numberOfTimesWillBePlayed;
-	static float pointsWorth;
 	
 	static int customMinRange;
 	static int customMaxRange;
@@ -38,10 +36,10 @@ public class MathOperator {
 	
 	public static void operate(int userAnswer){
 		
-		if (MathQuizGame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
+		if (MathQuizGame.numberOfTimesPlayed <= 9){
 			if (userAnswer == MathQuizGame.total){
 				EnterText("You are correct!");
-				MathQuizGame.score += pointsWorth;
+				MathQuizGame.score += 10;
 				
 				newNumbers();
 			} else {
@@ -54,7 +52,7 @@ public class MathOperator {
 			
 			if (MathQuizGame.total == userAnswer){
 				EnterText("You are correct!");
-				MathQuizGame.score += pointsWorth;
+				MathQuizGame.score += 10;
 			}else{
 				EnterText("Wrong. Correct Answer: " + MathQuizGame.total);
 			}
@@ -126,9 +124,6 @@ public class MathOperator {
 		}
 		char[] customOperationArray = customArgs[2].toCharArray();
 		customOperation = customOperationArray[0];
-		int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
-		numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
-		pointsWorth = 100 / numberOfTimesWillBePlayed;
 		GenerateNewNumbers(3);
 		determineQuestionToAsk();
 		MathQuizGame.number1 = number1;
@@ -150,22 +145,16 @@ public class MathOperator {
 				number1 = generator.nextInt(11);
 				number2 = generator.nextInt(11);
 				operationToUse = '+';
-				numberOfTimesWillBePlayed = 10;
-				pointsWorth = 10;
 				break;
 			case 1:
 				number1 = generator.nextInt(21);
 				number2 = generator.nextInt(21);
 				operationToUse = randomOp('+','*',' ',' ');
-				numberOfTimesWillBePlayed = 10;
-				pointsWorth = 10;
 				break;
 			case 2:
 				number1 = generator.nextInt(41) - 20;
 				number2 = generator.nextInt(41) - 20;
 				operationToUse = randomOp('+','-','*',' ');
-				numberOfTimesWillBePlayed = 10;
-				pointsWorth = 10;
 				break;
 			case 3:
 				number1 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
