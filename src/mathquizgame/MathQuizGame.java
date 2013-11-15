@@ -152,7 +152,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		inputPanel.add(input);
 		inputPanel.add(enter);
 		add(inputPanel, BorderLayout.PAGE_END);
-		inputtedLines = new ArrayList(0);
+		inputtedLines = new ArrayList<>(0);
 		indexArrayThing = 0;
 		
 		addWindowFocusListener(new WindowAdapter() {
@@ -259,6 +259,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			}else if(txtToLowerCase.equals("/debug")){
 				debug();
 
+			}else if(txtToLowerCase.equals("/history")){
+				displayHistory();
 			}
 
 			else {
@@ -283,9 +285,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				MathOperator.startGameMiddle();
 			}else if(txtToLowerCase.equals("high school") || txtToLowerCase.equals("h")){
 				MathOperator.startGameHigh();
-			}else if(txtToLowerCase.equals("/debug") ){
-				debug();
-
 			}else if(txtToLowerCase.equals("custom") || txtToLowerCase.equals("c")){
 				EnterText("----------------------");
 				EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
@@ -328,6 +327,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			}else if(txtToLowerCase.equals("/debug")){
 				debug();
 
+			}else if(txtToLowerCase.equals("/history")){
+				displayHistory();
 			}else{
 				EnterText("That is not available at the time. Please choose a difficulty level.");
 				input.requestFocusInWindow();
@@ -433,6 +434,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("MathQuizGame.total               = " + total);
 		EnterText("MathQuizGame.score               = " + score);
 		EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
+		EnterText("MathQuizGame.indexArrayThing     = " + indexArrayThing);
 		EnterText("MathQuizGame.currentFont         = " + currentFont);
 		EnterText("MathQuizGame.currentSize         = " + currentSize);
 		EnterText("MathQuizGame.state               = " + state);
@@ -451,6 +453,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("Java Version = " + System.getProperty("java.version"));
 		EnterText("");
 		input.selectAll();
+	}
+	public static void displayHistory(){
+		for(int i = 0;i>=inputtedLines.size();i++){
+			EnterText(inputtedLines.get(i));
+		}
 	}
 
 	@Override
@@ -476,8 +483,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				input.requestFocus();
 				input.selectAll();
 			}
-		}
-		if(e.getKeyCode() == KeyEvent.VK_DOWN){
+		}else if(e.getKeyCode() == KeyEvent.VK_DOWN){
 			e.consume();
 			if(indexArrayThing == inputtedLines.size()-1){
 				input.requestFocus();
@@ -488,6 +494,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				input.requestFocus();
 				input.selectAll();
 			}
+		}else{
+			indexArrayThing = inputtedLines.size();
 		}
 	}
 
