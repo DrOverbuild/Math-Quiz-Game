@@ -126,9 +126,14 @@ public class MathOperator {
 		}
 		char[] customOperationArray = customArgs[2].toCharArray();
 		customOperation = customOperationArray[0];
-		int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
-		numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
-		pointsWorth = 100 / numberOfTimesWillBePlayed;
+		try{
+			int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
+			numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
+			pointsWorth = 100 / numberOfTimesWillBePlayed;
+		}catch(ArrayIndexOutOfBoundsException e){
+			numberOfTimesWillBePlayed = 10;
+			pointsWorth = 10;
+		}
 		GenerateNewNumbers(3);
 		determineQuestionToAsk();
 		MathQuizGame.number1 = number1;

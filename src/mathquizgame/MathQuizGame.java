@@ -238,7 +238,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		txtToLowerCase = txt.toLowerCase();
 		inputtedLines.add(txt);
 		indexArrayThing++;
-		
+
 		if (state == VARIABLE_STATE){
 			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
 				restart();
@@ -260,7 +260,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				debug();
 
 			}
-			
+
 			else {
 				try{
 					int inputValue = Integer.parseInt(input.getText());
@@ -285,7 +285,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				MathOperator.startGameHigh();
 			}else if(txtToLowerCase.equals("/debug") ){
 				debug();
-				
+
 			}else if(txtToLowerCase.equals("custom") || txtToLowerCase.equals("c")){
 				EnterText("----------------------");
 				EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
