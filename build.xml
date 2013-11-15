@@ -10,6 +10,20 @@
 <project name="MathQuizGame" default="default" basedir=".">
     <description>Builds, tests, and runs the project MathQuizGame.</description>
     <import file="nbproject/build-impl.xml"/>
+	
+	<taskdef name="bundleapp"
+             classname="com.oracle.appbundler.AppBundlerTask"   
+             classpath="lib/appbundler-1.0.jar" />
+
+    <target name="bundle-mathquizgame">
+        <bundleapp outputdirectory="dist"
+            name="MathQuizGame"
+            displayname="MathQuizGame"
+            identifier="tenny1028.MathQuizGame"
+            mainclassname="mathquizgame.MathQuizGame">
+            <classpath file="dist/MathQuizGame.jar" />
+        </bundleapp>
+    </target>
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -51,8 +65,7 @@
       -init-macrodef-junit:     defines macro for junit execution
       -init-macrodef-debug:     defines macro for class debugging
       -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      -do-jar:                  JAR building
       run:                      execution of project 
       -javadoc-build:           Javadoc generation
       test-report:              JUnit report generation

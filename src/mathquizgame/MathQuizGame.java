@@ -8,8 +8,6 @@ package mathquizgame;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -18,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 import javax.swing.*;
@@ -34,6 +33,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	JPanel inputPanel;
 	static JTextArea consoleMessages;
 	static JTextField input;
+	static ArrayList<String> inputtedLines;
+	static int indexArrayThing;
 	static int numberOfTimesPlayed;
 	static int number1;
 	static int number2;
@@ -88,11 +89,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		consoleMessages.setWrapStyleWord(true);
 		scrollPane = new JScrollPane(consoleMessages);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		//scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
-		//	 public void adjustmentValueChanged(AdjustmentEvent e) {  
-		//		e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-		//	}
-		//});
 		add(scrollPane, BorderLayout.CENTER);
 		
 		String userHome = System.getProperty("user.home");
@@ -150,11 +146,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		inputPanel = new JPanel();
 		enter = new JButton("Enter");
 		enter.addActionListener(this);
+		input.addActionListener(this);
 		input.addKeyListener(this);
 		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.LINE_AXIS));
 		inputPanel.add(input);
 		inputPanel.add(enter);
 		add(inputPanel, BorderLayout.PAGE_END);
+		inputtedLines = new ArrayList(0);
+		indexArrayThing = 0;
 		
 		addWindowFocusListener(new WindowAdapter() {
 							   public void windowGainedFocus(WindowEvent e) {
@@ -237,6 +236,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		String txtToLowerCase;
 		txt = input.getText();
 		txtToLowerCase = txt.toLowerCase();
+		inputtedLines.add(txt);
+		indexArrayThing++;
 		
 		if (state == VARIABLE_STATE){
 			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
@@ -340,17 +341,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	
 	public void actionPerformed(ActionEvent actionEvent) {
 		somethingHappened();
-		
-	}
-	public void keyTyped(KeyEvent e){
-		
-	}
-	public void keyPressed(KeyEvent keyEvent){
-		if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
-			somethingHappened();
-        }
-	}
-	public void keyReleased(KeyEvent e){
 		
 	}
 	
@@ -461,6 +451,49 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("Java Version = " + System.getProperty("java.version"));
 		EnterText("");
 		input.selectAll();
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+			if(e.getKeyCode() == KeyEvent.VK_UP){
+				indexArrayThing--;
+				input.setText(inputtedLines.get(indexArrayThing));
+				input.requestFocus();
+				input.selectAll();
+			}
+		}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_UP){
+			e.consume();
+			if(indexArrayThing == 0){
+				input.requestFocus();
+				input.selectAll();
+			}else if(indexArrayThing > 0){
+				indexArrayThing--;
+				input.setText(inputtedLines.get(indexArrayThing));
+				input.requestFocus();
+				input.selectAll();
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_DOWN){
+			e.consume();
+			if(indexArrayThing == inputtedLines.size()-1){
+				input.requestFocus();
+				input.selectAll();
+			}else if(indexArrayThing < inputtedLines.size()-1){
+				indexArrayThing++;
+				input.setText(inputtedLines.get(indexArrayThing));
+				input.requestFocus();
+				input.selectAll();
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
 }
