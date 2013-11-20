@@ -237,7 +237,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		txt = input.getText();
 		txtToLowerCase = txt.toLowerCase();
 		inputtedLines.add(txt);
-		indexArrayThing++;
+		indexArrayThing=inputtedLines.size()-1;
 
 		if (state == VARIABLE_STATE){
 			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
@@ -455,9 +455,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		input.selectAll();
 	}
 	public static void displayHistory(){
-		for(int i = 0;i>=inputtedLines.size();i++){
+		for(int i = 0;i<inputtedLines.size();i++){
 			EnterText(inputtedLines.get(i));
 		}
+		input.requestFocus();
+		input.selectAll();
 	}
 
 	@Override
