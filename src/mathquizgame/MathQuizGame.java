@@ -404,6 +404,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("/clearfile: Clears text in " + logFilePath);
 		EnterText("/debug: Shows technical information you wouldn't understand if you're not a programmer.");
 		EnterText("/help (or /?): Displays all the available commands, their arguments, and what they do.");
+		EnterText("/history: Displays everything you have entered in.");
 		EnterText("/restart (or y): Restarts the game and resets the score to 0.");
 		EnterText("/say <msg>: Displays the message you type.");
 		EnterText("/setfont <font>: Changes the font of the program to the font you choose.");
@@ -455,21 +456,17 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		input.selectAll();
 	}
 	public static void displayHistory(){
+		EnterText(" --- HISTORY ---");
 		for(int i = 0;i<inputtedLines.size();i++){
 			EnterText(inputtedLines.get(i));
 		}
 		input.requestFocus();
 		input.selectAll();
+		EnterText(" ---   END   ---");
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-			if(e.getKeyCode() == KeyEvent.VK_UP){
-				indexArrayThing--;
-				input.setText(inputtedLines.get(indexArrayThing));
-				input.requestFocus();
-				input.selectAll();
-			}
 		}
 
 	@Override
