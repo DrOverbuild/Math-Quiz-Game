@@ -22,9 +22,7 @@ import java.util.Random;
 import javax.swing.*;
 
 /**
- * 
  * @author Jasper
- * 
  */
 
 public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
@@ -57,11 +55,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static int customMinRange;
 	static char customOperation;
 	
-	// This field stores what the program
-	// is waiting for when it waits for 
-	// user input.
+	/** 
+	 * This field stores what the program is waiting for when it waits for user input.
+	 */
 	static int state;
-
+	
 	// State fields
 	public static final int VARIABLE_STATE = 0;
 	public static final int DIFFICULTY_CHANGING_STATE = 1;
@@ -94,12 +92,16 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		String userHome = System.getProperty("user.home");
 		String libraryFolder;
 		String os = OSValidator.findOS();
-		if (os.equals("mac")){
-			libraryFolder = userHome + "/Library/Application Support/mathquizgame/";
-		}else if (os.equals("windows")){
-			libraryFolder = userHome + "\\Application Data\\mathquizgame\\";
-		}else{
-			libraryFolder = userHome + "/.mathquizgame/";
+		switch (os) {
+			case "mac":
+				libraryFolder = userHome + "/Library/Application Support/mathquizgame/";
+				break;
+			case "windows":
+				libraryFolder = userHome + "\\Application Data\\mathquizgame\\";
+				break;
+			default:
+				libraryFolder = userHome + "/.mathquizgame/";
+				break;
 		}
 		
 		logDirectory = new File(libraryFolder);
@@ -118,8 +120,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			try{
 				wasCreated = log.createNewFile();
 				EnterText("File " + logFilePath + " created successfully.",true);
-			}catch(SecurityException e){
-			}catch(IOException otherE){
+			}catch(SecurityException | IOException e){
 			}
 		}
 		
@@ -156,6 +157,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		indexArrayThing = 0;
 		
 		addWindowFocusListener(new WindowAdapter() {
+							   @Override
 							   public void windowGainedFocus(WindowEvent e) {
 							   input.requestFocusInWindow();
 							   }
@@ -174,11 +176,10 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public static void printLineToFile(String txt){
 		
 		try {
-			FileWriter fileWriter = new FileWriter(logFilePath,true);
-			fileWriter.write(txt + "\n");
-			fileWriter.close();
+			try (FileWriter fileWriter = new FileWriter(logFilePath,true)) {
+				fileWriter.write(txt + "\n");
+			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
 		}
 	}
 	
@@ -319,14 +320,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		}
 	}
 	
+	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		somethingHappened();
 		
 	}
 	
 	public static void main(String[] args) {
-		
-		new MathQuizGame();
+		MathQuizGame mathQuizGame = new MathQuizGame();
 		
 	}
 	
