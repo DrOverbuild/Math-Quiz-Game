@@ -230,6 +230,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		return argument;
 	}
 	
+	/**
+	 * This method is called when user presses enter on the keyboard or clicks the enter button on the UI.
+	 */
 	public void somethingHappened(){
 		
 		String txt;
@@ -239,31 +242,28 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		inputtedLines.add(txt);
 		indexArrayThing=inputtedLines.size()-1;
 
-		if (state == VARIABLE_STATE){
-			if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
-				restart();
-			}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
-				quit();
-			}else if(txtToLowerCase.equals("/clear")){
-				clear();
-			}else if (txtToLowerCase.contains("/setfont")){
-				setfont(txt);
-			}else if(txtToLowerCase.contains("/say")){
-				say(txt);
-			}else if (txtToLowerCase.contains("/setsize")){
-				setsize(txt);
-			}else if (txtToLowerCase.equals("/help") || txtToLowerCase.equals("/?")){
-				help();
-			}else if(txtToLowerCase.equals("/clearfile")){
-				clearfile();
-			}else if(txtToLowerCase.equals("/debug")){
-				debug();
-
-			}else if(txtToLowerCase.equals("/history")){
-				displayHistory();
-			}
-
-			else {
+		if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
+			restart();
+		}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
+			quit();
+		}else if(txtToLowerCase.equals("/clear")){
+			clear();
+		}else if (txtToLowerCase.contains("/setfont")){
+			setfont(txt);
+		}else if(txtToLowerCase.contains("/say")){
+			say(txt);
+		}else if (txtToLowerCase.contains("/setsize")){
+			setsize(txt);
+		}else if (txtToLowerCase.equals("/help") || txtToLowerCase.equals("/?")){
+			help();
+		}else if(txtToLowerCase.equals("/clearfile")){
+			clearfile();
+		}else if(txtToLowerCase.equals("/debug")){
+			debug();
+		}else if(txtToLowerCase.equals("/history")){
+			displayHistory();
+		}else{
+			if (state == VARIABLE_STATE){
 				try{
 					int inputValue = Integer.parseInt(input.getText());
 					EnterText(" " + txt,true);
@@ -277,66 +277,45 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					input.selectAll();
 				}
 				setQuestionState(0);
-			}
-		}else if(state == DIFFICULTY_CHANGING_STATE){
-			if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
-				MathOperator.startGameElementary();
-			}else if (txtToLowerCase.equals("middle school") || txtToLowerCase.equals("m")){
-				MathOperator.startGameMiddle();
-			}else if(txtToLowerCase.equals("high school") || txtToLowerCase.equals("h")){
-				MathOperator.startGameHigh();
-			}else if(txtToLowerCase.equals("custom") || txtToLowerCase.equals("c")){
-				EnterText("----------------------");
-				EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
-				EnterText("custom 50 10 * 10");
-				EnterText("OR: c 50 10 * 10");
-				EnterText("While 50 is the maximum, 10 is the minimum, * is the operation to use, and the game will ask 10 questions.");
-				EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"*\" (multiply)");
-				setQuestionState(1);
-				input.selectAll();
-			}else if (txtToLowerCase.contains("custom ") || txtToLowerCase.contains("c ")){
-				String[] customArgs;
-				if(txtToLowerCase.contains("custom")){
-					customArgs = findCommandArguments("custom",txt);
-				}else{
-					customArgs = findCommandArguments("c",txt);
-				}
-				try{
-					MathOperator.startGameCustom(customArgs);
-				}catch(NumbersAreSameException e){
-					EnterText("The numbers used in the range must not be the same. Please pick different ones.");
+			}else if(state == DIFFICULTY_CHANGING_STATE){
+				if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
+					MathOperator.startGameElementary();
+				}else if (txtToLowerCase.equals("middle school") || txtToLowerCase.equals("m")){
+					MathOperator.startGameMiddle();
+				}else if(txtToLowerCase.equals("high school") || txtToLowerCase.equals("h")){
+					MathOperator.startGameHigh();
+				}else if(txtToLowerCase.equals("custom") || txtToLowerCase.equals("c")){
+					EnterText("----------------------");
+					EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
+					EnterText("custom 50 10 x 10");
+					EnterText("OR: c 50 10 x 10");
+					EnterText("While 50 is the maximum, 10 is the minimum, x is the operation to use, and the game will ask 10 questions.");
+					EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"x\" (multiply)");
 					setQuestionState(1);
 					input.selectAll();
+				}else if (txtToLowerCase.contains("custom ") || txtToLowerCase.contains("c ")){
+					String[] customArgs;
+					if(txtToLowerCase.contains("custom")){
+						customArgs = findCommandArguments("custom",txt);
+					}else{
+						customArgs = findCommandArguments("c",txt);
+					}
+					try{
+						MathOperator.startGameCustom(customArgs);
+					}catch(NumbersAreSameException e){
+						EnterText("The numbers used in the range must not be the same. Please pick different ones.");
+						setQuestionState(1);
+						input.selectAll();
+					}
+				}else{
+					EnterText("That is not available at the time. Please choose a difficulty level.");
+					input.requestFocusInWindow();
+					input.selectAll();
+					setQuestionState(1);
 				}
-			}else if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
-				restart();
-			}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
-				quit();
-			}else if(txtToLowerCase.equals("/clear")){
-				clear();
-			}else if (txtToLowerCase.contains("/setfont")){
-				setfont(txt);
-			}else if(txtToLowerCase.contains("/say")){
-				say(txt);
-			}else if (txtToLowerCase.contains("/setsize")){
-				setsize(txt);
-			}else if (txtToLowerCase.equals("/help") || txtToLowerCase.equals("/?")){
-				help();
-			}else if(txtToLowerCase.equals("/clearfile")){
-				clearfile();
-			}else if(txtToLowerCase.equals("/debug")){
-				debug();
-
-			}else if(txtToLowerCase.equals("/history")){
-				displayHistory();
 			}else{
-				EnterText("That is not available at the time. Please choose a difficulty level.");
-				input.requestFocusInWindow();
-				input.selectAll();
-				setQuestionState(1);
+				EnterText("Error: State not defined. Please report this bug to http://sourceforge.net/projects/mathquizgame/tickets/");
 			}
-		}else{
-			EnterText("Error: State not defined. Please report this bug to http://sourceforge.net/projects/mathquizgame/tickets/");
 		}
 	}
 	

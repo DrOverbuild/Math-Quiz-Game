@@ -25,10 +25,10 @@ public class MathOperator {
 	static char customOperation;
 	
 	// Operation characters
-	public static final char PLUS_OPERATION = '+';
-	public static final char SUBTRACT_OPERATION = '-';
-	public static final char MULTIPLY_OPERATION = '*';
-	public static final char DIVIDE_OPERATION = '/';
+	public static final char PLUS_OPERATION_CHAR = '+';
+	public static final char SUBTRACT_OPERATION_CHAR = '-';
+	public static final char MULTIPLY_OPERATION_CHAR = 'x';
+	public static final char DIVIDE_OPERATION_CHAR = '/';
 	
 	// Difficulty fields
 	public static final int ELEMENTARY_DIFFICULTY = 0;
@@ -161,14 +161,14 @@ public class MathOperator {
 			case 1:
 				number1 = generator.nextInt(21);
 				number2 = generator.nextInt(21);
-				operationToUse = randomOp('+','*',' ',' ');
+				operationToUse = randomOp('+','x',' ',' ');
 				numberOfTimesWillBePlayed = 10;
 				pointsWorth = 10;
 				break;
 			case 2:
 				number1 = generator.nextInt(41) - 20;
 				number2 = generator.nextInt(41) - 20;
-				operationToUse = randomOp('+','-','*',' ');
+				operationToUse = randomOp('+','-','x',' ');
 				numberOfTimesWillBePlayed = 10;
 				pointsWorth = 10;
 				break;
@@ -223,7 +223,7 @@ public class MathOperator {
 			EnterText("What is " + number1 + " - " + number2 + "?");
 		}else{
 			MathQuizGame.total = number1 * number2;
-			EnterText("What is " + number1 + " * " + number2 + "?");
+			EnterText("What is " + number1 + " x " + number2 + "?");
 		}
 	}
 	private static void newNumbers(){
