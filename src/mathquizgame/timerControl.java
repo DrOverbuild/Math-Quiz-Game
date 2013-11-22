@@ -30,9 +30,9 @@ final class timerControl implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int secs = timer.getDelay() / 1000;
+		int secs = timer.getInitialDelay() / 1000;
 		MathQuizGame.EnterText("\nTimer reached " + secs + " seconds.");
-		MathOperator.endGame();
+		MathQuizGame.endGame();
 	}
 	
 }

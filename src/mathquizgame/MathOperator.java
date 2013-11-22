@@ -50,6 +50,7 @@ public class MathOperator {
 				newNumbers();
 				
 			}
+			MathQuizGame.setQuestionState(0);
 		} else {
 			
 			if (MathQuizGame.total == userAnswer){
@@ -58,8 +59,11 @@ public class MathOperator {
 			}else{
 				EnterText("Wrong. Correct Answer: " + MathQuizGame.total);
 			}
-			
-			endGame();
+			if(MathQuizGame.getTimerRunning()){
+				MathQuizGame.timer.stop();
+			}
+			MathQuizGame.endGame();
+		
 		}
 	}
 	
@@ -245,11 +249,5 @@ public class MathOperator {
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
-	}
-	public static void endGame(){
-		EnterText("You are finished with your quiz.");
-		EnterText("Here's your score: " + MathQuizGame.score + "%");
-			
-		EnterText("Play again? (Y/N)");
 	}
 }

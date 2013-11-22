@@ -66,6 +66,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	// State fields
 	public static final int VARIABLE_STATE = 0;
 	public static final int DIFFICULTY_CHANGING_STATE = 1;
+	public static final int END_OF_GAME_STATE = 2;
 	
 	// These fields have been added for the local
 	// Multiplayer mode, but I don't think I will
@@ -204,6 +205,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		printLineToFile(input);
 	}
 	
+	public static void endGame(){
+		EnterText("You are finished with your quiz.");
+		EnterText("Here's your score: " + MathQuizGame.score + "%");
+			
+		EnterText("Play again? (Y/N)");
+		setQuestionState(2);
+	}
+	
 	public static void setDifficulty(int newDifficulty){
 		difficultyLevel = newDifficulty;
 	}
@@ -283,15 +292,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					int inputValue = Integer.parseInt(input.getText());
 					EnterText(" " + txt,true);
 					MathOperator.operate(inputValue);
-					//nextQuestion(number1, number2, inputValue);
 					input.requestFocusInWindow();
 					input.selectAll();
 				} catch (NumberFormatException e){
-					EnterText("Please type a number or one of the");
-					EnterText("commands available");
+					EnterText("Please type a number or one of the commands available.");
 					input.selectAll();
 				}
-				setQuestionState(0);
 			}else if(state == DIFFICULTY_CHANGING_STATE){
 				if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
 					MathOperator.startGameElementary();
@@ -322,7 +328,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 						setQuestionState(1);
 						input.selectAll();
 					}
-				}else if(txtToLowerCase.contains("/setuptimer")){
+				}else if(txtToLowerCase.contains("/setuptimer") || txtToLowerCase.contains("/timer")){
 					setupTimer(txt);
 				}else{
 					EnterText("That is not available at the time. Please choose a difficulty level.");
@@ -330,6 +336,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					input.selectAll();
 					setQuestionState(1);
 				}
+			}else if (state == END_OF_GAME_STATE){
+				EnterText("That is not available at the time. Please choose whether you want to play again or not.");
 			}else{
 				EnterText("Error: State not defined. Please report this bug to http://sourceforge.net/projects/mathquizgame/tickets/");
 			}
@@ -461,7 +469,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText(" ---   END   ---");
 	}
 	public static void setupTimer(String txt){
-		String args = findCommandArgument("/setuptimer",txt);
+		String args;
+		try{
+			args = findCommandArgument("/setuptimer",txt);
+		}catch(StringIndexOutOfBoundsException e){
+			args = "30";
+		}
 		try{
 			int milliseconds = Integer.parseInt(args) * 1000;
 			timer.setInitialDelay(milliseconds);
