@@ -59,10 +59,7 @@ public class MathOperator {
 				EnterText("Wrong. Correct Answer: " + MathQuizGame.total);
 			}
 			
-			EnterText("You are finished with your quiz.");
-			EnterText("Here's your score: " + MathQuizGame.score + "%");
-			
-			EnterText("Play again? (Y/N)");
+			endGame();
 		}
 	}
 	
@@ -70,6 +67,9 @@ public class MathOperator {
 		resetFields();
 		setDifficulty(ELEMENTARY_DIFFICULTY);
 		EnterText("Starting a new game set in the Elementary Difficulty.");
+		if(MathQuizGame.getTimerRunning()){
+			MathQuizGame.timer.start();
+		}
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(0);
 		determineQuestionToAsk();
@@ -83,6 +83,9 @@ public class MathOperator {
 		resetFields();
 		setDifficulty(MIDDLE_SCHOOL_DIFFICULTY);
 		EnterText("Starting a new game set in the Middle School Difficulty.");
+		if(MathQuizGame.getTimerRunning()){
+			MathQuizGame.timer.start();
+		}
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(1);
 		determineQuestionToAsk();
@@ -96,6 +99,9 @@ public class MathOperator {
 		resetFields();
 		setDifficulty(HIGH_SCHOOL_DIFFICULTY);
 		EnterText("Starting a new game set in the High School Difficulty.");
+		if(MathQuizGame.getTimerRunning()){
+			MathQuizGame.timer.start();
+		}
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(2);
 		determineQuestionToAsk();
@@ -110,6 +116,9 @@ public class MathOperator {
 		resetFields();
 		setDifficulty(CUSTOM_DIFFICULTY);
 		EnterText("Starting a new game set in the Custom Difficulty.");
+		if(MathQuizGame.getTimerRunning()){
+			MathQuizGame.timer.start();
+		}
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		
 		int maxRangeLocal = Integer.parseInt(customArgs[0]);
@@ -236,5 +245,11 @@ public class MathOperator {
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
+	}
+	public static void endGame(){
+		EnterText("You are finished with your quiz.");
+		EnterText("Here's your score: " + MathQuizGame.score + "%");
+			
+		EnterText("Play again? (Y/N)");
 	}
 }

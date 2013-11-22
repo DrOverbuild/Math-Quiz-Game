@@ -45,6 +45,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static String currentFont;
 	static int currentSize;
 	
+	static timerControl timer;
+	static boolean timerRunning;
+	
 	// Fields for File management
 	static File logDirectory;
 	static File log;
@@ -127,11 +130,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		// Find date of 
 		Calendar cal = Calendar.getInstance();
     	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		String date = "" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE);
+		int calMonth = cal.get(cal.MONTH) + 1;
+		String date = "" + calMonth + "-" + cal.get(Calendar.DATE);
 		
 		printLineToFile("-------------------");
 		printLineToFile("Date of use: " + date);
 		printLineToFile("Time of use: " + sdf.format(cal.getTime()));
+		
+		timer = new timerControl(1000,false);
 		
 		currentFont = "Courier";
 		currentSize = 12;
@@ -204,6 +210,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	
 	public static void setQuestionState (int newState){
 		state = newState;
+	}
+	
+	public static void setTimerRunning(boolean setRunning){
+		timerRunning = setRunning;
+	}
+	
+	public static boolean getTimerRunning(){
+		return timerRunning;
 	}
 	
 	public static String[] findCommandArguments(String command, String userInput){
@@ -308,6 +322,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 						setQuestionState(1);
 						input.selectAll();
 					}
+				}else if(txtToLowerCase.contains("/setuptimer")){
+					setupTimer(txt);
 				}else{
 					EnterText("That is not available at the time. Please choose a difficulty level.");
 					input.requestFocusInWindow();
@@ -444,7 +460,22 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		input.selectAll();
 		EnterText(" ---   END   ---");
 	}
-
+	public static void setupTimer(String txt){
+		String args = findCommandArgument("/setuptimer",txt);
+		try{
+			int milliseconds = Integer.parseInt(args) * 1000;
+			timer.setInitialDelay(milliseconds);
+			EnterText("Timer setup with " + args + " seconds. Timer will start countdown as soon as you choose a difficulty level.");
+			
+		}catch(NumberFormatException e){
+			EnterText("Number of seconds has to be a number.");
+		}
+		setTimerRunning(true);
+		setQuestionState(1);
+		input.requestFocus();
+		input.selectAll();
+	}
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		}
