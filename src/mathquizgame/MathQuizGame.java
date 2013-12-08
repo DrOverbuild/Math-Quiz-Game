@@ -148,6 +148,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			EnterText("MATH QUIZ!!! Let's see how much you know...");
 		}
 		EnterText("To see a list of a commands, type /help or /?.");
+		EnterText("To set up a countdown timer, type /timer <time in seconds>");
 		
 		input = new JTextField(35);
 		input.setFont(new java.awt.Font("Courier", 0, 12));
@@ -471,8 +472,13 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public static void setupTimer(String txt){
 		String args;
 		try{
-			args = findCommandArgument("/setuptimer",txt);
+			if (txt.contains("/timer")){
+				args = findCommandArgument("/timer",txt);
+			}else{
+				args = findCommandArgument("/setuptimer",txt);
+			}
 		}catch(StringIndexOutOfBoundsException e){
+			EnterText("No amount of seconds specified.");
 			args = "30";
 		}
 		try{

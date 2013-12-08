@@ -126,7 +126,10 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		
 		int maxRangeLocal = Integer.parseInt(customArgs[0]);
-		int minRangeLocal = Integer.parseInt(customArgs[1]);
+		int minRangeLocal = 0;
+		// If User only specifies one number and that's it, the program should automatically set
+		// the minimum range to 0 and the max to whatever the user specified.
+		if(customArgs.length > 1){minRangeLocal = Integer.parseInt(customArgs[1]);} else { minRangeLocal = 0; }
 		
 		if(maxRangeLocal < minRangeLocal){
 			customMaxRange = minRangeLocal;
@@ -137,16 +140,25 @@ public class MathOperator {
 		}else if (maxRangeLocal == minRangeLocal){
 			throw new NumbersAreSameException("Numbers cannot be same.");
 		}
-		char[] customOperationArray = customArgs[2].toCharArray();
+		
+		char[] customOperationArray = null;
+		
+		if(customArgs.length > 2){
+			customOperationArray = customArgs[2].toCharArray();
+		} else{
+			customOperationArray[0] = '+';
+		}
 		customOperation = customOperationArray[0];
-		try{
+
+		if(customArgs.length > 3){
 			int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
 			numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
 			pointsWorth = 100 / numberOfTimesWillBePlayed;
-		}catch(ArrayIndexOutOfBoundsException e){
+		}else if (customArgs.length == 3){
 			numberOfTimesWillBePlayed = 10;
 			pointsWorth = 10;
 		}
+	
 		GenerateNewNumbers(3);
 		determineQuestionToAsk();
 		MathQuizGame.number1 = number1;
