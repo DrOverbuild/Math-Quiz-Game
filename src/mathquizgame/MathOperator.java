@@ -12,47 +12,47 @@ import java.util.Random;
  * @author jasper
  */
 public class MathOperator {
-	
+
 	static Random generator = new Random();
 	static int number1;
 	static int number2;
 	static char operationToUse;
 	static int numberOfTimesWillBePlayed;
 	static float pointsWorth;
-	
+
 	static int customMinRange;
 	static int customMaxRange;
 	static char customOperation;
-	
+
 	// Operation characters
 	public static final char PLUS_OPERATION_CHAR = '+';
 	public static final char SUBTRACT_OPERATION_CHAR = '-';
 	public static final char MULTIPLY_OPERATION_CHAR = 'x';
 	public static final char DIVIDE_OPERATION_CHAR = '/';
-	
+
 	// Difficulty fields
 	public static final int ELEMENTARY_DIFFICULTY = 0;
 	public static final int MIDDLE_SCHOOL_DIFFICULTY = 1;
 	public static final int HIGH_SCHOOL_DIFFICULTY = 2;
 	public static final int CUSTOM_DIFFICULTY = 3;
-	
+
 	public static void operate(int userAnswer){
-		
+
 		if (MathQuizGame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
 			if (userAnswer == MathQuizGame.total){
 				EnterText("You are correct!");
 				MathQuizGame.score += pointsWorth;
-				
+
 				newNumbers();
 			} else {
 				EnterText("Wrong. Correct Answer: " + MathQuizGame.total);
-				
+
 				newNumbers();
-				
+
 			}
 			MathQuizGame.setQuestionState(0);
 		} else {
-			
+
 			if (MathQuizGame.total == userAnswer){
 				EnterText("You are correct!");
 				MathQuizGame.score += pointsWorth;
@@ -63,10 +63,10 @@ public class MathOperator {
 				MathQuizGame.timer.stop();
 			}
 			MathQuizGame.endGame();
-		
+
 		}
 	}
-	
+
 	public static void startGameElementary(){
 		resetFields();
 		setDifficulty(ELEMENTARY_DIFFICULTY);
@@ -77,8 +77,8 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(0);
 		determineQuestionToAsk();
-		MathQuizGame.number1 = number1;
-		MathQuizGame.number2 = number2;
+		//MathQuizGame.number1 = number1;
+		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -93,8 +93,8 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(1);
 		determineQuestionToAsk();
-		MathQuizGame.number1 = number1;
-		MathQuizGame.number2 = number2;
+		//MathQuizGame.number1 = number1;
+		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -110,8 +110,8 @@ public class MathOperator {
 		GenerateNewNumbers(2);
 		determineQuestionToAsk();
 		MathQuizGame.total = number1 + number2;
-		MathQuizGame.number1 = number1;
-		MathQuizGame.number2 = number2;
+		//MathQuizGame.number1 = number1;
+		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -124,13 +124,13 @@ public class MathOperator {
 			MathQuizGame.timer.start();
 		}
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
-		
+
 		int maxRangeLocal = Integer.parseInt(customArgs[0]);
-		int minRangeLocal = 0;
+		int minRangeLocal;
 		// If User only specifies one number and that's it, the program should automatically set
 		// the minimum range to 0 and the max to whatever the user specified.
 		if(customArgs.length > 1){minRangeLocal = Integer.parseInt(customArgs[1]);} else { minRangeLocal = 0; }
-		
+
 		if(maxRangeLocal < minRangeLocal){
 			customMaxRange = minRangeLocal;
 			customMinRange = maxRangeLocal;
@@ -140,9 +140,9 @@ public class MathOperator {
 		}else if (maxRangeLocal == minRangeLocal){
 			throw new NumbersAreSameException("Numbers cannot be same.");
 		}
-		
+
 		char[] customOperationArray = null;
-		
+
 		if(customArgs.length > 2){
 			customOperationArray = customArgs[2].toCharArray();
 		} else{
@@ -158,22 +158,22 @@ public class MathOperator {
 			numberOfTimesWillBePlayed = 10;
 			pointsWorth = 10;
 		}
-	
+
 		GenerateNewNumbers(3);
 		determineQuestionToAsk();
-		MathQuizGame.number1 = number1;
-		MathQuizGame.number2 = number2;
+		//MathQuizGame.number1 = number1;
+		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
 	}
 
-	
-	
+
+
 	private static void EnterText(String txt){
 		MathQuizGame.EnterText(txt);
 	}
-	
+
 	private static void GenerateNewNumbers(int difficulty){
 		switch (difficulty) {
 			case 0:
@@ -207,26 +207,26 @@ public class MathOperator {
 				break;
 		}
 	}
-	
+
 	private static void setDifficulty(int newDifficulty){
 		MathQuizGame.setDifficulty(newDifficulty);
 	}
-	
+
 	private static void resetFields(){
 		MathQuizGame.numberOfTimesPlayed = 1;
 		MathQuizGame.score = 0;
 		MathQuizGame.total = 0;
-		MathQuizGame.number1 = 0;
-		MathQuizGame.number2 = 0;
+		//MathQuizGame.number1 = 0;
+		//MathQuizGame.number2 = 0;
 	}
-	
+
 	private static char randomOp(char op1, char op2, char op3, char op4){
 		char[] ops = new char[4];
 		ops[0] = op1;
 		ops[1] = op2;
 		ops[2] = op3;
 		ops[3] = op4;
-		
+
 		if(op4 == ' '){
 			int randomIndex = generator.nextInt(3);
 			return ops[randomIndex];
@@ -238,7 +238,7 @@ public class MathOperator {
 			return ops[randomIndex];
 		}
 	}
-	
+
 	private static void determineQuestionToAsk(){
 		if(operationToUse == '+'){
 			MathQuizGame.total = number1 + number2;
@@ -256,8 +256,8 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(MathQuizGame.difficultyLevel);
 		determineQuestionToAsk();
-		MathQuizGame.number1 = number1;
-		MathQuizGame.number2 = number2;
+		//MathQuizGame.number1 = number1;
+		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
