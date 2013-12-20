@@ -43,12 +43,13 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static int numberOfTimesPlayed;
 	//static int number1;
 	//static int number2;
-	static int total;
+	//static int total;
 	static float score;
 	static Random generator = new Random();
 	static JButton enter;
 	static String LastLine1;
 	static int difficultyLevel;
+
 	static String currentFont;
 	static int currentSize;
 
@@ -446,7 +447,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
 		//EnterText("MathQuizGame.number1             = " + number1);
 		//EnterText("MathQuizGame.number2             = " + number2);
-		EnterText("MathQuizGame.total               = " + total);
+		//EnterText("MathQuizGame.total               = " + total);
 		EnterText("MathQuizGame.score               = " + score);
 		EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
 		EnterText("MathQuizGame.indexArrayThing     = " + indexArrayThing);

@@ -16,6 +16,7 @@ public class MathOperator {
 	static Random generator = new Random();
 	static int number1;
 	static int number2;
+	static int total;
 	static char operationToUse;
 	static int numberOfTimesWillBePlayed;
 	static float pointsWorth;
@@ -39,13 +40,13 @@ public class MathOperator {
 	public static void operate(int userAnswer){
 
 		if (MathQuizGame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
-			if (userAnswer == MathQuizGame.total){
+			if (userAnswer == total){
 				EnterText("You are correct!");
 				MathQuizGame.score += pointsWorth;
 
 				newNumbers();
 			} else {
-				EnterText("Wrong. Correct Answer: " + MathQuizGame.total);
+				EnterText("Wrong. Correct Answer: " + total);
 
 				newNumbers();
 
@@ -53,11 +54,11 @@ public class MathOperator {
 			MathQuizGame.setQuestionState(0);
 		} else {
 
-			if (MathQuizGame.total == userAnswer){
+			if (total == userAnswer){
 				EnterText("You are correct!");
 				MathQuizGame.score += pointsWorth;
 			}else{
-				EnterText("Wrong. Correct Answer: " + MathQuizGame.total);
+				EnterText("Wrong. Correct Answer: " + total);
 			}
 			if(MathQuizGame.getTimerRunning()){
 				MathQuizGame.timer.stop();
@@ -109,7 +110,7 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(2);
 		determineQuestionToAsk();
-		MathQuizGame.total = number1 + number2;
+		//total = number1 + number2;
 		//MathQuizGame.number1 = number1;
 		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
@@ -186,7 +187,12 @@ public class MathOperator {
 			case 1:
 				number1 = generator.nextInt(21);
 				number2 = generator.nextInt(21);
-				operationToUse = randomOp('+','x',' ',' ');
+				if(number1<=10&&number2<=10){
+					operationToUse = randomOp('+','x',' ',' ');
+				}else{
+					operationToUse = '+';
+				}
+
 				numberOfTimesWillBePlayed = 10;
 				pointsWorth = 10;
 				break;
@@ -203,7 +209,7 @@ public class MathOperator {
 				operationToUse = customOperation;
 				break;
 			default:
-				EnterText("Error: Difficulty out of range.");
+				EnterText("Error: Difficulty out of range: " + difficulty);
 				break;
 		}
 	}
@@ -215,9 +221,9 @@ public class MathOperator {
 	private static void resetFields(){
 		MathQuizGame.numberOfTimesPlayed = 1;
 		MathQuizGame.score = 0;
-		MathQuizGame.total = 0;
-		//MathQuizGame.number1 = 0;
-		//MathQuizGame.number2 = 0;
+		total = 0;
+		number1 = 0;
+		number2 = 0;
 	}
 
 	private static char randomOp(char op1, char op2, char op3, char op4){
@@ -241,13 +247,13 @@ public class MathOperator {
 
 	private static void determineQuestionToAsk(){
 		if(operationToUse == '+'){
-			MathQuizGame.total = number1 + number2;
+			total = number1 + number2;
 			EnterText("What is " + number1 + " + " + number2 + "?");
 		}else if (operationToUse == '-'){
-			MathQuizGame.total = number1 - number2;
+			total = number1 - number2;
 			EnterText("What is " + number1 + " - " + number2 + "?");
 		}else{
-			MathQuizGame.total = number1 * number2;
+			total = number1 * number2;
 			EnterText("What is " + number1 + " x " + number2 + "?");
 		}
 	}
