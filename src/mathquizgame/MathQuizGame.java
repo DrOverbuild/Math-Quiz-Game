@@ -186,9 +186,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 		setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
-		setLocationRelativeTo(null);
 		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 
 	public static void printLineToFile(String txt){
