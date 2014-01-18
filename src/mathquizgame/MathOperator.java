@@ -68,6 +68,37 @@ public class MathOperator {
 		}
 	}
 
+	public static void operate(int userAnswer, boolean showCorrectMessage) {
+
+		if (MathQuizGame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
+			if (userAnswer == total){
+				if(showCorrectMessage) EnterText("You are correct!");
+				MathQuizGame.score += pointsWorth;
+
+				newNumbers();
+			} else {
+				if(showCorrectMessage) EnterText("Wrong. Correct Answer: " + total);
+
+				newNumbers();
+
+			}
+			MathQuizGame.setQuestionState(0);
+		} else {
+
+			if (total == userAnswer){
+				if(showCorrectMessage) EnterText("You are correct!");
+				MathQuizGame.score += pointsWorth;
+			}else{
+				if(showCorrectMessage) EnterText("Wrong. Correct Answer: " + total);
+			}
+			if(MathQuizGame.getTimerRunning()){
+				MathQuizGame.timer.stop();
+			}
+			MathQuizGame.endGame();
+		}
+
+	}
+
 	public static void startGameElementary(){
 		resetFields();
 		setDifficulty(ELEMENTARY_DIFFICULTY);

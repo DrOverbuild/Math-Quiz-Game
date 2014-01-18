@@ -41,9 +41,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static ArrayList<String> inputtedLines;
 	static int indexArrayThing;
 	static int numberOfTimesPlayed;
-	//static int number1;
-	//static int number2;
-	//static int total;
 	static float score;
 	static Random generator = new Random();
 	static JButton enter;
@@ -297,7 +294,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			debug();
 		}else if(txtToLowerCase.equals("/history")){
 			displayHistory();
-		}else{
+		}// Add Commands here
+		else{
 			if (state == VARIABLE_STATE){
 				try{
 					int inputValue = Integer.parseInt(input.getText());
@@ -306,8 +304,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					input.requestFocusInWindow();
 					input.selectAll();
 				} catch (NumberFormatException e){
+					if(txtToLowerCase.startsWith("/changedifficulty")){
+						changeDifficulty(txt);
+					}else{
 					EnterText("Please type a number or one of the commands available.");
 					input.selectAll();
+					}
 				}
 			}else if(state == DIFFICULTY_CHANGING_STATE){
 				if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
@@ -504,6 +506,113 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		input.requestFocus();
 		input.selectAll();
 	}
+	public static void changeDifficulty(String txt){
+		String argument = findCommandArgument("/changedifficulty", txt).toLowerCase();
+		if(argument.equals("e")||argument.equals("elementary")){
+			setDifficulty(0);
+			EnterText("You are now in the Elementary Difficulty");
+			MathOperator.operate(MathOperator.total,false);
+		}else if(argument.equals("m")||argument.equals("middle school")){
+			setDifficulty(1);
+			EnterText("You are now in the Middle School Difficulty");
+			MathOperator.operate(MathOperator.total,false);
+		}else if (argument.equals("h")||argument.equals("high school")){
+			setDifficulty(2);
+			EnterText("You are now in the High School Difficulty");
+			MathOperator.operate(MathOperator.total,false);
+		}else if (argument.startsWith("c ")){
+			String[] customArgs = findCommandArguments("c",txt);
+
+			int maxRangeLocal = Integer.parseInt(customArgs[0]);
+			int minRangeLocal;
+			// If User only specifies one number and that's it, the program should automatically set
+			// the minimum range to 0 and the max to whatever the user specified.
+			if(customArgs.length > 1){minRangeLocal = Integer.parseInt(customArgs[1]);} else { minRangeLocal = 0; }
+
+			if(maxRangeLocal < minRangeLocal){
+				customMaxRange = minRangeLocal;
+				customMinRange = maxRangeLocal;
+			}else if (maxRangeLocal > minRangeLocal){
+				customMaxRange = maxRangeLocal;
+				customMinRange = minRangeLocal;
+			}else if (maxRangeLocal == minRangeLocal){
+				EnterText("Invalid Arguments. Minimum range and Maximum range must not be equal.");
+				return;
+			}
+
+			setDifficulty(3);
+			char[] customOperationArray = null;
+
+			if(customArgs.length > 2){
+				customOperationArray = customArgs[2].toCharArray();
+			} else{
+				customOperationArray[0] = '+';
+			}
+			customOperation = customOperationArray[0];
+
+			if(customArgs.length > 3){
+				int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
+				if(CustomNumberOfTimesToBePlayedLocal < numberOfTimesPlayed) MathOperator.numberOfTimesWillBePlayed = numberOfTimesPlayed;
+				else MathOperator.numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
+				MathOperator.pointsWorth = 100 / MathOperator.numberOfTimesWillBePlayed;
+			}else if (customArgs.length == 3){
+				MathOperator.numberOfTimesWillBePlayed = 10;
+				MathOperator.pointsWorth = 10;
+			}
+
+			EnterText("You are now in the custom difficulty");
+			MathOperator.operate(MathOperator.total,false);
+			input.selectAll();
+
+		}else if (argument.startsWith("custom ")){
+			String[] customArgs = findCommandArguments("custom",txt);
+
+			int maxRangeLocal = Integer.parseInt(customArgs[0]);
+			int minRangeLocal;
+			// If User only specifies one number and that's it, the program should automatically set
+			// the minimum range to 0 and the max to whatever the user specified.
+			if(customArgs.length > 1){minRangeLocal = Integer.parseInt(customArgs[1]);} else { minRangeLocal = 0; }
+
+			if(maxRangeLocal < minRangeLocal){
+				customMaxRange = minRangeLocal;
+				customMinRange = maxRangeLocal;
+			}else if (maxRangeLocal > minRangeLocal){
+				customMaxRange = maxRangeLocal;
+				customMinRange = minRangeLocal;
+			}else if (maxRangeLocal == minRangeLocal){
+				EnterText("Invalid Arguments. Minimum range and Maximum range must not be equal.");
+				return;
+			}
+
+			setDifficulty(3);
+			char[] customOperationArray = null;
+
+			if(customArgs.length > 2){
+				customOperationArray = customArgs[2].toCharArray();
+			} else{
+				customOperationArray[0] = '+';
+			}
+			customOperation = customOperationArray[0];
+
+			if(customArgs.length > 3){
+				int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
+				if(CustomNumberOfTimesToBePlayedLocal < numberOfTimesPlayed) MathOperator.numberOfTimesWillBePlayed = numberOfTimesPlayed;
+				else MathOperator.numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
+				MathOperator.pointsWorth = 100 / MathOperator.numberOfTimesWillBePlayed;
+			}else if (customArgs.length == 3){
+				MathOperator.numberOfTimesWillBePlayed = 10;
+				MathOperator.pointsWorth = 10;
+			}
+
+			EnterText("You are now in the custom difficulty");
+			MathOperator.operate(MathOperator.total,false);
+			input.selectAll();
+		}else{
+			EnterText("Invalid Arguments.");
+			input.selectAll();
+		}
+	}
+
 
 	@Override
 	public void keyTyped(KeyEvent e) {
