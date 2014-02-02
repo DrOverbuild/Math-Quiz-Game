@@ -6,6 +6,7 @@
 package mathquizgame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -21,6 +22,7 @@ import java.util.Calendar;
 import java.util.Random;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -49,6 +51,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 	static String currentFont;
 	static int currentSize;
+	static Color currentColor;
+	static Color currentForeground;
 
 	static timerControl timer;
 	static boolean timerRunning;
@@ -149,6 +153,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 		currentFont = "Courier";
 		currentSize = 12;
+		currentColor = Color.white;
+		currentForeground = Color.BLACK;
 		if (!wasCreated){
 			EnterText("MATH QUIZ!!! Let's see how much you know...",true);
 		} else{
@@ -294,6 +300,10 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			debug();
 		}else if(txtToLowerCase.equals("/history")){
 			displayHistory();
+		}else if(txtToLowerCase.equals("/changebackground")||txtToLowerCase.equals("/setbackground")){
+			 changeBackground();
+		}else if(txtToLowerCase.equals("/changeforeground")||txtToLowerCase.equals("/setforeground")){
+			 changeForeground();
 		}// Add Commands here
 		else{
 			if (state == VARIABLE_STATE){
@@ -612,7 +622,22 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			input.selectAll();
 		}
 	}
-
+	public void changeBackground() {
+		Color color = JColorChooser.showDialog(null, "Choose Color", currentForeground);
+		if(color != null){
+			consoleMessages.setBackground(color);
+			input.setBackground(color);
+			currentColor = color;
+		}
+	}
+	public void changeForeground(){
+		Color color = JColorChooser.showDialog(null, "Choose Color", currentColor);
+		if(color != null){
+			consoleMessages.setForeground(color);
+			input.setForeground(color);
+			currentForeground = color;
+		}
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -651,5 +676,4 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public void keyReleased(KeyEvent e) {
 		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
-
 }
