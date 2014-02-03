@@ -16,11 +16,12 @@
              classpath="lib/appbundler-1.0.jar" />
 
     <target name="bundle-mathquizgame">
-        <bundleapp outputdirectory="dist"
+        <bundleapp outputdirectory="macosx"
             name="MathQuizGame"
             displayname="MathQuizGame"
             identifier="tenny1028.MathQuizGame"
-            mainclassname="mathquizgame.MathQuizGame">
+            mainclassname="mathquizgame.MathQuizGame"
+			version="1.5">
             <classpath file="dist/MathQuizGame.jar" />
         </bundleapp>
     </target>

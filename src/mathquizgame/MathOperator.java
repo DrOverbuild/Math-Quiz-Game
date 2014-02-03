@@ -23,7 +23,7 @@ public class MathOperator {
 
 	static int customMinRange;
 	static int customMaxRange;
-	static char customOperation;
+	static String customOperations;
 
 	// Operation characters
 	public static final char PLUS_OPERATION_CHAR = '+';
@@ -152,16 +152,19 @@ public class MathOperator {
 		resetFields();
 		setDifficulty(CUSTOM_DIFFICULTY);
 		EnterText("Starting a new game set in the Custom Difficulty.");
-		if(MathQuizGame.getTimerRunning()){
-			MathQuizGame.timer.start();
-		}
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 
-		int maxRangeLocal = Integer.parseInt(customArgs[0]);
+		int maxRangeLocal;
 		int minRangeLocal;
 		// If User only specifies one number and that's it, the program should automatically set
 		// the minimum range to 0 and the max to whatever the user specified.
-		if(customArgs.length > 1){minRangeLocal = Integer.parseInt(customArgs[1]);} else { minRangeLocal = 0; }
+		if(customArgs.length >= 2){
+			minRangeLocal = Integer.parseInt(customArgs[1]);
+			maxRangeLocal = Integer.parseInt(customArgs[0]);
+		} else {
+			minRangeLocal = 0;
+			maxRangeLocal = Integer.parseInt(customArgs[0]);
+		}
 
 		if(maxRangeLocal < minRangeLocal){
 			customMaxRange = minRangeLocal;
@@ -173,22 +176,24 @@ public class MathOperator {
 			throw new NumbersAreSameException("Numbers cannot be same.");
 		}
 
-		char[] customOperationArray = null;
 
 		if(customArgs.length > 2){
-			customOperationArray = customArgs[2].toCharArray();
+			customOperations = customArgs[2];
 		} else{
-			customOperationArray[0] = '+';
+			customOperations = "+";
 		}
-		customOperation = customOperationArray[0];
 
 		if(customArgs.length > 3){
 			int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
 			numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
 			pointsWorth = 100 / numberOfTimesWillBePlayed;
-		}else if (customArgs.length == 3){
+		}else if (customArgs.length <= 3){
 			numberOfTimesWillBePlayed = 10;
 			pointsWorth = 10;
+		}
+
+		if(MathQuizGame.getTimerRunning()){
+			MathQuizGame.timer.start();
 		}
 
 		GenerateNewNumbers(3);
@@ -237,7 +242,7 @@ public class MathOperator {
 			case 3:
 				number1 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
 				number2 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
-				operationToUse = customOperation;
+				operationToUse = randomOp(customOperations.toCharArray());
 				break;
 			default:
 				EnterText("Error: Difficulty out of range: " + difficulty);
@@ -274,6 +279,11 @@ public class MathOperator {
 			int randomIndex = generator.nextInt(4);
 			return ops[randomIndex];
 		}
+	}
+
+	private static char randomOp(char [] ops){
+		int randomIndex = generator.nextInt(ops.length);
+		return ops[randomIndex];
 	}
 
 	private static void determineQuestionToAsk(){

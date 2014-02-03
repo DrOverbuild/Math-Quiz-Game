@@ -280,6 +280,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		inputtedLines.add(txt);
 		indexArrayThing=inputtedLines.size()-1;
 
+		input.selectAll();
+		input.requestFocus();
+
 		if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
 			restart();
 		}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
@@ -328,16 +331,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					MathOperator.startGameMiddle();
 				}else if(txtToLowerCase.equals("high school") || txtToLowerCase.equals("h")){
 					MathOperator.startGameHigh();
-				}else if(txtToLowerCase.equals("custom") || txtToLowerCase.equals("c")){
-					EnterText("----------------------");
-					EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
-					EnterText("custom 50 10 x 10");
-					EnterText("OR: c 50 10 x 10");
-					EnterText("While 50 is the maximum, 10 is the minimum, x is the operation to use, and the game will ask 10 questions.");
-					EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"x\" (multiply)");
-					setQuestionState(1);
-					input.selectAll();
-				}else if (txtToLowerCase.startsWith("custom ") || txtToLowerCase.startsWith("c ")){
+				}else if ((txtToLowerCase.startsWith("custom ")&&!txtToLowerCase.equals("custom ")) ||
+					      (txtToLowerCase.startsWith("c ")&&!txtToLowerCase.equals("c "))){
 					String[] customArgs;
 					if(txtToLowerCase.startsWith("custom ")){
 						customArgs = findCommandArguments("custom",txt);
@@ -351,6 +346,15 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 						setQuestionState(1);
 						input.selectAll();
 					}
+				}else if(txtToLowerCase.startsWith("custom") || txtToLowerCase.startsWith("c")){
+					EnterText("----------------------");
+					EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
+					EnterText("custom 50 10 x 10");
+					EnterText("OR: c 50 10 x 10");
+					EnterText("While 50 is the maximum, 10 is the minimum, x is the operation to use, and the game will ask 10 questions.");
+					EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"x\" (multiply)");
+					setQuestionState(1);
+					input.selectAll();
 				}else if(txtToLowerCase.startsWith("/setuptimer ") || txtToLowerCase.startsWith("/timer ")){
 					setupTimer(txt);
 				}else{
