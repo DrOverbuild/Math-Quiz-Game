@@ -52,7 +52,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static String currentFont;
 	static int currentSize;
 	static Color currentColor;
-	static Color currentForeground;
 
 	static timerControl timer;
 	static boolean timerRunning;
@@ -154,7 +153,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		currentFont = "Courier";
 		currentSize = 12;
 		currentColor = Color.white;
-		currentForeground = Color.BLACK;
 		if (!wasCreated){
 			EnterText("MATH QUIZ!!! Let's see how much you know...",true);
 		} else{
@@ -303,10 +301,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			debug();
 		}else if(txtToLowerCase.equals("/history")){
 			displayHistory();
-		}else if(txtToLowerCase.equals("/changebackground")||txtToLowerCase.equals("/setbackground")){
+		}else if(txtToLowerCase.equals("/changebackground")
+			   ||txtToLowerCase.equals("/setbackground")
+			   ||txtToLowerCase.equals("/setcolor")
+			   ||txtToLowerCase.equals("/changecolor")){
 			 changeBackground();
-		}else if(txtToLowerCase.equals("/changeforeground")||txtToLowerCase.equals("/setforeground")){
-			 changeForeground();
 		}// Add Commands here
 		else{
 			if (state == VARIABLE_STATE){
@@ -432,6 +431,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public static void help(){
 		EnterText("\nHere are all the available commands, their arguments, and what they do:");
 		EnterText("/clear: Clears the entire log except the last line that has been displayed.");
+		EnterText("/setcolor: Sets the background color of the output and input, and sets text color to the complementary.");
 		EnterText("/clearfile: Clears text in " + logFilePath);
 		EnterText("/debug: Shows technical information you wouldn't understand if you're not a programmer.");
 		EnterText("/help (or /?): Displays all the available commands, their arguments, and what they do.");
@@ -461,9 +461,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public static void debug(){
 		EnterText("");
 		EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
-		//EnterText("MathQuizGame.number1             = " + number1);
-		//EnterText("MathQuizGame.number2             = " + number2);
-		//EnterText("MathQuizGame.total               = " + total);
 		EnterText("MathQuizGame.score               = " + score);
 		EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
 		EnterText("MathQuizGame.indexArrayThing     = " + indexArrayThing);
@@ -627,19 +624,17 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		}
 	}
 	public void changeBackground() {
-		Color color = JColorChooser.showDialog(null, "Choose Color", currentForeground);
+		Color color = JColorChooser.showDialog(null, "Choose Color", currentColor);
 		if(color != null){
 			consoleMessages.setBackground(color);
 			input.setBackground(color);
 			currentColor = color;
-		}
-	}
-	public void changeForeground(){
-		Color color = JColorChooser.showDialog(null, "Choose Color", currentColor);
-		if(color != null){
-			consoleMessages.setForeground(color);
-			input.setForeground(color);
-			currentForeground = color;
+			int r = 255-color.getRed();
+			int g = 255-color.getGreen();
+			int b = 255-color.getBlue();
+			consoleMessages.setForeground(new Color(r,g,b));
+			input.setForeground(new Color(r,g,b));
+			EnterText("Background Color:" + color);
 		}
 	}
 
