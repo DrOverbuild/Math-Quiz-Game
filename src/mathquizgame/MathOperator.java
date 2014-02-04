@@ -109,8 +109,6 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(0);
 		determineQuestionToAsk();
-		//MathQuizGame.number1 = number1;
-		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -125,8 +123,6 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(1);
 		determineQuestionToAsk();
-		//MathQuizGame.number1 = number1;
-		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -141,9 +137,6 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(2);
 		determineQuestionToAsk();
-		//total = number1 + number2;
-		//MathQuizGame.number1 = number1;
-		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -198,8 +191,6 @@ public class MathOperator {
 
 		GenerateNewNumbers(3);
 		determineQuestionToAsk();
-		//MathQuizGame.number1 = number1;
-		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -303,8 +294,6 @@ public class MathOperator {
 		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
 		GenerateNewNumbers(MathQuizGame.difficultyLevel);
 		determineQuestionToAsk();
-		//MathQuizGame.number1 = number1;
-		//MathQuizGame.number2 = number2;
 		MathQuizGame.input.requestFocusInWindow();
 		MathQuizGame.input.selectAll();
 		MathQuizGame.setQuestionState(0);

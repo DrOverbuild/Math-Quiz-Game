@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Random;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -40,13 +39,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	JPanel inputPanel;
 	static JTextArea consoleMessages;
 	static JTextField input;
+	static JButton enter;
+
 	static ArrayList<String> inputtedLines;
 	static int indexArrayThing;
+	static String LastLine1;
+
 	static int numberOfTimesPlayed;
 	static float score;
-	static Random generator = new Random();
-	static JButton enter;
-	static String LastLine1;
 	static int difficultyLevel;
 
 	static String currentFont;
@@ -103,10 +103,35 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, BorderLayout.CENTER);
 
+		input = new JTextField(35);
+		input.setFont(new java.awt.Font("Courier", 0, 12));
+		inputPanel = new JPanel();
+		enter = new JButton("Enter");
+		enter.addActionListener(this);
+		input.addActionListener(this);
+		input.addKeyListener(this);
+		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.LINE_AXIS));
+		inputPanel.add(input);
+		inputPanel.add(enter);
+		add(inputPanel, BorderLayout.PAGE_END);
+		inputtedLines = new ArrayList<>(0);
+		indexArrayThing = 0;
+
+		addWindowFocusListener(new WindowAdapter() {
+							   @Override
+							   public void windowGainedFocus(WindowEvent e) {
+							   input.requestFocusInWindow();
+							   }
+							   });
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+
 		String userHome = System.getProperty("user.home");
 		String libraryFolder;
-		String os = OSValidator.findOS();
-		switch (os) {
+		switch (OSValidator.findOS()) {
 			case "mac":
 				libraryFolder = userHome + "/Library/Application Support/mathquizgame/";
 				break;
@@ -140,19 +165,19 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 		// Find date of
 		Calendar cal = Calendar.getInstance();
-    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		int calMonth = cal.get(Calendar.MONTH) + 1;
-		String date = "" + calMonth + "-" + cal.get(Calendar.DATE);
+		String date = calMonth + "-" + cal.get(Calendar.DATE);
 
 		printLineToFile("-------------------");
-		printLineToFile("Date of use: " + date);
-		printLineToFile("Time of use: " + sdf.format(cal.getTime()));
+		printLineToFile("Date: " + date + " at " + sdf.format(cal.getTime()));
 
 		timer = new timerControl(1000,false);
 
 		currentFont = "Courier";
 		currentSize = 12;
 		currentColor = Color.white;
+
 		if (!wasCreated){
 			EnterText("MATH QUIZ!!! Let's see how much you know...",true);
 		} else{
@@ -161,49 +186,25 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("To see a list of a commands, type /help or /?.");
 		EnterText("To set up a countdown timer, type /timer <time in seconds>");
 
-		input = new JTextField(35);
-		input.setFont(new java.awt.Font("Courier", 0, 12));
-		inputPanel = new JPanel();
-		enter = new JButton("Enter");
-		enter.addActionListener(this);
-		input.addActionListener(this);
-		input.addKeyListener(this);
-		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.LINE_AXIS));
-		inputPanel.add(input);
-		inputPanel.add(enter);
-		add(inputPanel, BorderLayout.PAGE_END);
-		inputtedLines = new ArrayList<>(0);
-		indexArrayThing = 0;
-
-		addWindowFocusListener(new WindowAdapter() {
-							   @Override
-							   public void windowGainedFocus(WindowEvent e) {
-							   input.requestFocusInWindow();
-							   }
-							   });
 
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School, or Custom");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
 
-		setResizable(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
+
 	}
 
 	public static void printLineToFile(String txt){
-
+		FileWriter fileWriter = null;
 		try {
-			try (FileWriter fileWriter = new FileWriter(logFilePath,true)) {
-				fileWriter.write(txt + "\n");
-			}
+			fileWriter = new FileWriter(logFilePath,true);
+			fileWriter.write(txt + System.getProperty("line.separator"));
+			fileWriter.close();
 		} catch (IOException ex) {
 		}
 	}
 
 	public static void EnterText(String input){
-		String str = consoleMessages.getText() + "\n" + input;
+		String str = consoleMessages.getText() + System.getProperty("line.separator") + input;
 		consoleMessages.setText(str);
 		LastLine1 = input;
 		printLineToFile(input);
@@ -316,12 +317,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					input.requestFocusInWindow();
 					input.selectAll();
 				} catch (NumberFormatException e){
-					if(txtToLowerCase.startsWith("/changedifficulty")){
-						changeDifficulty(txt);
-					}else{
 					EnterText("Please type a number or one of the commands available.");
 					input.selectAll();
-					}
 				}
 			}else if(state == DIFFICULTY_CHANGING_STATE){
 				if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
@@ -377,15 +374,13 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	public static void main(String[] args) {
-		MathQuizGame mathQuizGame = new MathQuizGame();
+		new MathQuizGame();
 
 	}
 
 	public static void restart(){
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School, or Custom");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
-
-		input.selectAll();
 	}
 	public static void quit(){
 		EnterText("Quiting...");
@@ -393,7 +388,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 	public static void clear(){
 		consoleMessages.setText("");
-		input.selectAll();
 		EnterText(LastLine1);
 	}
 	public static void setfont(String txt){
@@ -404,15 +398,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		currentFont = newFont;
 
 		EnterText("Font changed to " + newFont);
-
-		input.selectAll();
 	}
 	public static void say(String txt){
-		String sayMessage = findCommandArgument("/say",txt);
-
-		EnterText(sayMessage);
-
-		input.selectAll();
+		EnterText(findCommandArgument("/say", txt));
 	}
 	public static void setsize(String txt){
 		String newSizeSTR = findCommandArgument("/setsize",txt);
@@ -426,7 +414,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		}catch(NumberFormatException e){
 			EnterText("The new size has to be a number.");
 		}
-		input.selectAll();
 	}
 	public static void help(){
 		EnterText("\nHere are all the available commands, their arguments, and what they do:");
@@ -442,7 +429,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("/setsize <size>: Changes the size of the program to the size you choose. Note that the size must be a number.");
 		EnterText("/quit (or n): Disables the controls and requires you to quit the program.");
 		EnterText("\n");
-		input.selectAll();
 	}
 	public static void clearfile(){
 		if(log.delete()){
@@ -456,7 +442,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		}else{
 			EnterText("Error: File could not be cleared.");
 		}
-		input.selectAll();
 	}
 	public static void debug(){
 		EnterText("");
@@ -481,25 +466,20 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText("User Home Directory: " + System.getProperty("user.home"));
 		EnterText("Java Version = " + System.getProperty("java.version"));
 		EnterText("");
-		input.selectAll();
 	}
 	public static void displayHistory(){
 		EnterText(" --- HISTORY ---");
 		for(int i = 0;i<inputtedLines.size();i++){
 			EnterText(inputtedLines.get(i));
 		}
-		input.requestFocus();
-		input.selectAll();
 		EnterText(" ---   END   ---");
 	}
 	public static void setupTimer(String txt){
 		String args;
 		try{
-			if (txt.contains("/timer")){
-				args = findCommandArgument("/timer",txt);
-			}else{
-				args = findCommandArgument("/setuptimer",txt);
-			}
+			if (txt.startsWith("/timer")) args = findCommandArgument("/timer",txt);
+			else if (txt.startsWith("/setuptimer")) args = findCommandArgument("/setuptimer",txt);
+			else args="30";
 		}catch(StringIndexOutOfBoundsException e){
 			EnterText("No amount of seconds specified.");
 			args = "30";
@@ -514,114 +494,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		}
 		setTimerRunning(true);
 		setQuestionState(1);
-		input.requestFocus();
-		input.selectAll();
-	}
-	public static void changeDifficulty(String txt){
-		String argument = findCommandArgument("/changedifficulty", txt).toLowerCase();
-		if(argument.equals("e")||argument.equals("elementary")){
-			setDifficulty(0);
-			EnterText("You are now in the Elementary Difficulty");
-			MathOperator.operate(MathOperator.total,false);
-		}else if(argument.equals("m")||argument.equals("middle school")){
-			setDifficulty(1);
-			EnterText("You are now in the Middle School Difficulty");
-			MathOperator.operate(MathOperator.total,false);
-		}else if (argument.equals("h")||argument.equals("high school")){
-			setDifficulty(2);
-			EnterText("You are now in the High School Difficulty");
-			MathOperator.operate(MathOperator.total,false);
-		}else if (argument.startsWith("c ")){
-			String[] customArgs = findCommandArguments("c",txt);
-
-			int maxRangeLocal = Integer.parseInt(customArgs[0]);
-			int minRangeLocal;
-			// If User only specifies one number and that's it, the program should automatically set
-			// the minimum range to 0 and the max to whatever the user specified.
-			if(customArgs.length > 1){minRangeLocal = Integer.parseInt(customArgs[1]);} else { minRangeLocal = 0; }
-
-			if(maxRangeLocal < minRangeLocal){
-				customMaxRange = minRangeLocal;
-				customMinRange = maxRangeLocal;
-			}else if (maxRangeLocal > minRangeLocal){
-				customMaxRange = maxRangeLocal;
-				customMinRange = minRangeLocal;
-			}else if (maxRangeLocal == minRangeLocal){
-				EnterText("Invalid Arguments. Minimum range and Maximum range must not be equal.");
-				return;
-			}
-
-			setDifficulty(3);
-			char[] customOperationArray = null;
-
-			if(customArgs.length > 2){
-				customOperationArray = customArgs[2].toCharArray();
-			} else{
-				customOperationArray[0] = '+';
-			}
-			customOperation = customOperationArray[0];
-
-			if(customArgs.length > 3){
-				int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
-				if(CustomNumberOfTimesToBePlayedLocal < numberOfTimesPlayed) MathOperator.numberOfTimesWillBePlayed = numberOfTimesPlayed;
-				else MathOperator.numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
-				MathOperator.pointsWorth = 100 / MathOperator.numberOfTimesWillBePlayed;
-			}else if (customArgs.length == 3){
-				MathOperator.numberOfTimesWillBePlayed = 10;
-				MathOperator.pointsWorth = 10;
-			}
-
-			EnterText("You are now in the custom difficulty");
-			MathOperator.operate(MathOperator.total,false);
-			input.selectAll();
-
-		}else if (argument.startsWith("custom ")){
-			String[] customArgs = findCommandArguments("custom",txt);
-
-			int maxRangeLocal = Integer.parseInt(customArgs[0]);
-			int minRangeLocal;
-			// If User only specifies one number and that's it, the program should automatically set
-			// the minimum range to 0 and the max to whatever the user specified.
-			if(customArgs.length > 1){minRangeLocal = Integer.parseInt(customArgs[1]);} else { minRangeLocal = 0; }
-
-			if(maxRangeLocal < minRangeLocal){
-				customMaxRange = minRangeLocal;
-				customMinRange = maxRangeLocal;
-			}else if (maxRangeLocal > minRangeLocal){
-				customMaxRange = maxRangeLocal;
-				customMinRange = minRangeLocal;
-			}else if (maxRangeLocal == minRangeLocal){
-				EnterText("Invalid Arguments. Minimum range and Maximum range must not be equal.");
-				return;
-			}
-
-			setDifficulty(3);
-			char[] customOperationArray = null;
-
-			if(customArgs.length > 2){
-				customOperationArray = customArgs[2].toCharArray();
-			} else{
-				customOperationArray[0] = '+';
-			}
-			customOperation = customOperationArray[0];
-
-			if(customArgs.length > 3){
-				int CustomNumberOfTimesToBePlayedLocal = Integer.parseInt(customArgs[3]);
-				if(CustomNumberOfTimesToBePlayedLocal < numberOfTimesPlayed) MathOperator.numberOfTimesWillBePlayed = numberOfTimesPlayed;
-				else MathOperator.numberOfTimesWillBePlayed = CustomNumberOfTimesToBePlayedLocal;
-				MathOperator.pointsWorth = 100 / MathOperator.numberOfTimesWillBePlayed;
-			}else if (customArgs.length == 3){
-				MathOperator.numberOfTimesWillBePlayed = 10;
-				MathOperator.pointsWorth = 10;
-			}
-
-			EnterText("You are now in the custom difficulty");
-			MathOperator.operate(MathOperator.total,false);
-			input.selectAll();
-		}else{
-			EnterText("Invalid Arguments.");
-			input.selectAll();
-		}
 	}
 	public void changeBackground() {
 		Color color = JColorChooser.showDialog(null, "Choose Color", currentColor);
@@ -634,13 +506,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			int b = 255-color.getBlue();
 			consoleMessages.setForeground(new Color(r,g,b));
 			input.setForeground(new Color(r,g,b));
-			EnterText("Background Color:" + color);
+			EnterText("Background Color: "+color.getRed()+", "+color.getGreen()+", "+color.getBlue()+".");
 		}
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -672,7 +543,5 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
+	public void keyReleased(KeyEvent e) {}
 }

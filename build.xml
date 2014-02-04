@@ -11,20 +11,23 @@
     <description>Builds, tests, and runs the project MathQuizGame.</description>
     <import file="nbproject/build-impl.xml"/>
 	
-	<taskdef name="bundleapp"
+	<!--<taskdef name="bundleapp"
              classname="com.oracle.appbundler.AppBundlerTask"   
-             classpath="lib/appbundler-1.0.jar" />
+             classpath="lib/appbundler-1.0.jar" />-->
 
-    <target name="bundle-mathquizgame">
+   <!-- <target name="bundle-mathquizgame">
         <bundleapp outputdirectory="macosx"
             name="MathQuizGame"
             displayname="MathQuizGame"
             identifier="tenny1028.MathQuizGame"
             mainclassname="mathquizgame.MathQuizGame"
-			version="1.5">
+			displayicon="../MathQuizGame-1.3/files/GenericApp.icns">
             <classpath file="dist/MathQuizGame.jar" />
         </bundleapp>
     </target>
+	
+	-->
+	
     <!--
 
     There exist several targets which are by default empty and which can be 
