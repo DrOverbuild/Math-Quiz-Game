@@ -28,6 +28,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import mathquizgame.commands.CommandImpl;
+import mathquizgame.commands.CommandNotFoundException;
+import mathquizgame.commands.CustomCommand;
 
 /**
  * @author Jasper
@@ -38,10 +41,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	JScrollPane scrollPane;
 	JPanel inputPanel;
 	static JTextArea consoleMessages;
-	static JTextField input;
+	public static JTextField input;
 	static JButton enter;
+	static CommandImpl commandParserAndExecuter;
 
-	static ArrayList<String> inputtedLines;
+	public static ArrayList<String> inputtedLines;
 	static int indexArrayThing;
 	static String LastLine1;
 
@@ -76,7 +80,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public static final int DIFFICULTY_CHANGING_STATE = 1;
 	public static final int END_OF_GAME_STATE = 2;
 
-	public static final double VERSION_ID = 1.5;
+	public static final double VERSION_ID = 1.6;
 
 	// These fields have been added for the local
 	// Multiplayer mode, but I don't think I will
@@ -128,6 +132,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+
+		commandParserAndExecuter = new CommandImpl();
 
 		String userHome = System.getProperty("user.home");
 		String libraryFolder;
@@ -242,31 +248,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		return timerRunning;
 	}
 
-	public static String[] findCommandArguments(String command, String userInput){
-
-		int lengthOfCommand = command.length() + 1;
-		int lengthOfUserInput = userInput.length();
-		int lengthOfArgument = lengthOfUserInput - lengthOfCommand;
-		char[] toCharArray = userInput.toCharArray();
-		String argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
-
-		String[] splitted = argument.split("\\s");
-
-		return splitted;
-	}
-	public static String findCommandArgument(String command, String userInput){
-
-		// This command will only find one argument.
-
-		int lengthOfCommand = command.length() + 1;
-		int lengthOfUserInput = userInput.length();
-		int lengthOfArgument = lengthOfUserInput - lengthOfCommand;
-		char[] toCharArray = userInput.toCharArray();
-		String argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
-
-		return argument;
-	}
-
 	/**
 	 * This method is called when user presses enter on the keyboard or clicks the enter button on the UI.
 	 */
@@ -282,32 +263,14 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		input.selectAll();
 		input.requestFocus();
 
-		if (txtToLowerCase.equals("y") || txtToLowerCase.equals("/restart")){
-			restart();
-		}else if (txtToLowerCase.equals("n") || txtToLowerCase.equals("/quit")){
-			quit();
-		}else if(txtToLowerCase.equals("/clear")){
-			clear();
-		}else if (txtToLowerCase.startsWith("/setfont ")){
-			setfont(txt);
-		}else if(txtToLowerCase.startsWith("/say ")){
-			say(txt);
-		}else if (txtToLowerCase.startsWith("/setsize ")){
-			setsize(txt);
-		}else if (txtToLowerCase.equals("/help") || txtToLowerCase.equals("/?")){
-			help();
-		}else if(txtToLowerCase.equals("/clearfile")){
-			clearfile();
-		}else if(txtToLowerCase.equals("/debug")){
-			debug();
-		}else if(txtToLowerCase.equals("/history")){
-			displayHistory();
-		}else if(txtToLowerCase.equals("/changebackground")
-			   ||txtToLowerCase.equals("/setbackground")
-			   ||txtToLowerCase.equals("/setcolor")
-			   ||txtToLowerCase.equals("/changecolor")){
-			 changeBackground();
-		}// Add Commands here
+		if (txtToLowerCase.startsWith("/")){
+			try {
+				commandParserAndExecuter.parseAndExecuteCommand(txt);
+			} catch (CommandNotFoundException ex) {
+				EnterText("Command not found.");
+			}
+		}else if(txtToLowerCase.equals("y")) restart();
+		else if(txtToLowerCase.equals("n")) quit();
 		else{
 			if (state == VARIABLE_STATE){
 				try{
@@ -329,19 +292,15 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					MathOperator.startGameHigh();
 				}else if ((txtToLowerCase.startsWith("custom ")&&!txtToLowerCase.equals("custom ")) ||
 					      (txtToLowerCase.startsWith("c ")&&!txtToLowerCase.equals("c "))){
+
 					String[] customArgs;
 					if(txtToLowerCase.startsWith("custom ")){
-						customArgs = findCommandArguments("custom",txt);
+						customArgs = CommandImpl.parseArgs("c", txt);
 					}else{
-						customArgs = findCommandArguments("c",txt);
+						customArgs = CommandImpl.parseArgs("c", txt);
 					}
-					try{
-						MathOperator.startGameCustom(customArgs);
-					}catch(NumbersAreSameException e){
-						EnterText("The numbers used in the range must not be the same. Please pick different ones.");
-						setQuestionState(1);
-						input.selectAll();
-					}
+
+					new CustomCommand().execute(customArgs);
 				}else if(txtToLowerCase.startsWith("custom") || txtToLowerCase.startsWith("c")){
 					EnterText("----------------------");
 					EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
@@ -391,21 +350,16 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		EnterText(LastLine1);
 	}
 	public static void setfont(String txt){
-		String newFont = findCommandArgument("/setfont",txt);
 
-		input.setFont(new java.awt.Font(newFont, 0, currentSize));
-		consoleMessages.setFont(new java.awt.Font(newFont,0, currentSize));
-		currentFont = newFont;
+		input.setFont(new java.awt.Font(txt, 0, currentSize));
+		consoleMessages.setFont(new java.awt.Font(txt,0, currentSize));
+		currentFont = txt;
 
-		EnterText("Font changed to " + newFont);
-	}
-	public static void say(String txt){
-		EnterText(findCommandArgument("/say", txt));
+		EnterText("Font changed to " + txt);
 	}
 	public static void setsize(String txt){
-		String newSizeSTR = findCommandArgument("/setsize",txt);
 		try{
-			int newSize = Integer.parseInt(newSizeSTR);
+			int newSize = Integer.parseInt(txt);
 			input.setFont(new java.awt.Font(currentFont, 0, newSize));
 			consoleMessages.setFont(new java.awt.Font(currentFont, 0, newSize));
 			currentSize = newSize;
@@ -414,21 +368,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		}catch(NumberFormatException e){
 			EnterText("The new size has to be a number.");
 		}
-	}
-	public static void help(){
-		EnterText("\nHere are all the available commands, their arguments, and what they do:");
-		EnterText("/clear: Clears the entire log except the last line that has been displayed.");
-		EnterText("/setcolor: Sets the background color of the output and input, and sets text color to the complementary.");
-		EnterText("/clearfile: Clears text in " + logFilePath);
-		EnterText("/debug: Shows technical information you wouldn't understand if you're not a programmer.");
-		EnterText("/help (or /?): Displays all the available commands, their arguments, and what they do.");
-		EnterText("/history: Displays everything you have entered in.");
-		EnterText("/restart (or y): Restarts the game and resets the score to 0.");
-		EnterText("/say <msg>: Displays the message you type.");
-		EnterText("/setfont <font>: Changes the font of the program to the font you choose.");
-		EnterText("/setsize <size>: Changes the size of the program to the size you choose. Note that the size must be a number.");
-		EnterText("/quit (or n): Disables the controls and requires you to quit the program.");
-		EnterText("\n");
 	}
 	public static void clearfile(){
 		if(log.delete()){
@@ -443,56 +382,28 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			EnterText("Error: File could not be cleared.");
 		}
 	}
-	public static void debug(){
-		EnterText("");
-		EnterText("MathQuizGame.numberOfTimesPlayed = " + numberOfTimesPlayed);
-		EnterText("MathQuizGame.score               = " + score);
-		EnterText("MathQuizGame.difficultyLevel     = " + difficultyLevel);
-		EnterText("MathQuizGame.indexArrayThing     = " + indexArrayThing);
-		EnterText("MathQuizGame.currentFont         = " + currentFont);
-		EnterText("MathQuizGame.currentSize         = " + currentSize);
-		EnterText("MathQuizGame.state               = " + state);
-		EnterText("MathQuizGame.logFilePath         = " + logFilePath);
-		EnterText("");
-		EnterText("MathOperator.operationToUse            = " + MathOperator.operationToUse);
-		EnterText("MathOperator.numberOfTimesWillBePlayed = " + MathOperator.numberOfTimesWillBePlayed);
-		EnterText("MathOperator.pointsWorth               = " + MathOperator.pointsWorth);
-		EnterText("MathOperator.customMinRange            = " + MathOperator.customMinRange);
-		EnterText("MathOperator.customMaxRange            = " + MathOperator.customMaxRange);
-		EnterText("MathOperator.customOperation           = " + MathOperator.operationToUse);
-		EnterText("");
-		EnterText("OS Name      = " + System.getProperty("os.name"));
-		EnterText("OS Verion    = " + System.getProperty("os.version"));
-		EnterText("User Home Directory: " + System.getProperty("user.home"));
-		EnterText("Java Version = " + System.getProperty("java.version"));
-		EnterText("");
-	}
-	public static void displayHistory(){
-		EnterText(" --- HISTORY ---");
-		for(int i = 0;i<inputtedLines.size();i++){
-			EnterText(inputtedLines.get(i));
-		}
-		EnterText(" ---   END   ---");
-	}
 	public static void setupTimer(String txt){
 		String args;
-		try{
-			if (txt.startsWith("/timer")) args = findCommandArgument("/timer",txt);
-			else if (txt.startsWith("/setuptimer")) args = findCommandArgument("/setuptimer",txt);
-			else args="30";
-		}catch(StringIndexOutOfBoundsException e){
-			EnterText("No amount of seconds specified.");
-			args = "30";
-		}
-		try{
-			int milliseconds = Integer.parseInt(args) * 1000;
-			timer.setInitialDelay(milliseconds);
-			EnterText("Timer setup with " + args + " seconds. Timer will start countdown as soon as you choose a difficulty level.");
 
-		}catch(NumberFormatException e){
-			EnterText("Number of seconds has to be a number.");
+		if (!timerRunning) {
+			try {
+				args = CommandImpl.parseArgs("/timer", txt)[0];
+			} catch (StringIndexOutOfBoundsException e) {
+				EnterText("No amount of seconds specified.");
+				args = "30";
+			}
+			try {
+				int milliseconds = Integer.parseInt(args) * 1000;
+				timer.setInitialDelay(milliseconds);
+				EnterText("Timer setup with " + args + " seconds. Timer will start countdown as soon as you choose a difficulty level.");
+				setTimerRunning(true);
+			} catch (NumberFormatException e) {
+				EnterText("Number of seconds has to be a number.");
+			}
+		}else{
+			timerRunning = false;
+			EnterText("Timer turned off.");
 		}
-		setTimerRunning(true);
 		setQuestionState(1);
 	}
 	public void changeBackground() {
