@@ -47,7 +47,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public JTextArea consoleMessages;
 	public JTextField input;
 	JButton enter;
-	static CommandImpl commandParserAndExecuter;
+	static CommandImpl commandParserAndExecuter = new CommandImpl();
 
 	public ArrayList<String> inputtedLines;
 	public int indexArrayThing;
@@ -164,8 +164,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		setLocationRelativeTo(null);
 		setVisible(true);
 
-		commandParserAndExecuter = new CommandImpl();
-
 		String userHome = System.getProperty("user.home");
 		String libraryFolder;
 		switch (OSValidator.findOS()) {
@@ -199,7 +197,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			}catch(SecurityException | IOException e){
 			}
 		}
+	}
 
+	public void launch(){
 		// Find date of
 		Calendar cal = Calendar.getInstance();
     	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -217,19 +217,13 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		currentSize = 12;
 		currentColor = Color.white;
 
-		if (!wasCreated){
-			EnterText("MATH QUIZ!!! Let's see how much you know...",true);
-		} else{
-			EnterText("MATH QUIZ!!! Let's see how much you know...");
-		}
+		EnterText("MATH QUIZ!!! Let's see how much you know...");
 		EnterText("To see a list of a commands, type /help or /?.");
 		EnterText("To set up a countdown timer, type /timer <time in seconds>");
 
 
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School, or Custom");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
-
-
 	}
 
 	public static void printLineToFile(String txt){
@@ -365,11 +359,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 	}
 
-	public static void main(String[] args) {
-		frame = new MathQuizGame();
-
-	}
-
 	public static void restart(){
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School, or Custom");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
@@ -488,4 +477,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {}
-}
+
+	public static void main(String[] args) {
+		frame = new MathQuizGame();
+		frame.launch();
+
+	}}

@@ -9,12 +9,14 @@ package mathquizgame;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
  * @author jasper
  */
-public class DebugScreen extends JFrame implements Runnable{
+public class DebugScreen extends JPanel implements Runnable{
 
 	JLabel indexArrayThing = new JLabel(MathQuizGame.frame.indexArrayThing+"",JLabel.RIGHT);
 	JLabel LastLine1 = new JLabel(MathQuizGame.frame.LastLine1+"",JLabel.RIGHT);
@@ -38,10 +40,14 @@ public class DebugScreen extends JFrame implements Runnable{
 	JLabel customMaxRange = new JLabel(MathOperator.customMaxRange+"",JLabel.RIGHT);
 	JLabel customOperations = new JLabel(MathOperator.customOperations+"",JLabel.RIGHT);
 
-	public DebugScreen(){
-		super("Debug");
+	JFrame frame;
+
+	public DebugScreen(JFrame frame){
+
+		this.frame = frame;
 
 		setLayout(new GridLayout(21,2));
+		setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		add(new JLabel("MathQuizGame.indexArrayThing: "));
 		add(indexArrayThing);
@@ -86,10 +92,12 @@ public class DebugScreen extends JFrame implements Runnable{
 		add(new JLabel("MathOperator.customOperations: "));
 		add(customOperations);
 
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		pack();
-		setSize(getWidth()/2,getHeight());
-		setVisible(true);
+		this.frame.add(this);
+
+		this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.frame.pack();
+		this.frame.setSize(this.frame.getWidth()/2,this.frame.getHeight());
+		this.frame.setVisible(true);
 
 	}
 
@@ -117,6 +125,6 @@ public class DebugScreen extends JFrame implements Runnable{
 			customMinRange.setText(MathOperator.customMinRange+"");
 			customOperations.setText(MathOperator.customOperations);
 		}
-		dispose();
+		frame.dispose();
 	}
 }

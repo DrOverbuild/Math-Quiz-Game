@@ -6,6 +6,7 @@
 
 package mathquizgame.commands;
 
+import javax.swing.JFrame;
 import mathquizgame.DebugScreen;
 import mathquizgame.MathQuizGame;
 
@@ -20,13 +21,17 @@ public class DebugCommand implements Command{
 		if(MathQuizGame.isDebugOn) MathQuizGame.isDebugOn = false;
 		else{
 			MathQuizGame.isDebugOn = true;
-			DebugScreen debugScreen = new DebugScreen();
-			debugScreen.setBounds(0, 0, debugScreen.getWidth(), debugScreen.getHeight());
+			JFrame debugScreenFrame = new JFrame("Debug");
+			DebugScreen debugScreen = new DebugScreen(debugScreenFrame);
+			debugScreenFrame.setBounds(0, 0, debugScreen.getWidth(), debugScreen.getHeight());
 			MathQuizGame.frame.toFront();
 			Thread thread = new Thread(debugScreen);
 			thread.start();
 
 		}
+		String io = "off";
+		if (MathQuizGame.isDebugOn) io = "on";
+		MathQuizGame.EnterText("Debug turned " + io);
 	}
 
 	@Override

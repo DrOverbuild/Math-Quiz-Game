@@ -58,8 +58,6 @@ public class CommandImpl{
 	public static String[] parseArgs(String command, String userInput){
 
 		String argument = null;
-		System.out.println(command);
-		System.out.println(userInput);
 		if (userInput.equals("/"+command)) {
 			argument = "";
 		}else{
