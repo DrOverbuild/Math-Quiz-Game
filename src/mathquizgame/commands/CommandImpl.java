@@ -56,11 +56,19 @@ public class CommandImpl{
 	}
 
 	public static String[] parseArgs(String command, String userInput){
-		int lengthOfCommand = command.length()+2;
-		int lengthOfUserInput = userInput.length();
-		int lengthOfArgument = lengthOfUserInput - lengthOfCommand;
-		char[] toCharArray = userInput.toCharArray();
-		String argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
+
+		String argument = null;
+		System.out.println(command);
+		System.out.println(userInput);
+		if (userInput.equals("/"+command)) {
+			argument = "";
+		}else{
+			int lengthOfCommand = command.length() + 2;
+			int lengthOfUserInput = userInput.length();
+			int lengthOfArgument = lengthOfUserInput - lengthOfCommand;
+			char[] toCharArray = userInput.toCharArray();
+			argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
+		}
 
 		String[] splitted = argument.split("\\s");
 

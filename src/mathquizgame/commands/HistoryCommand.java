@@ -17,8 +17,8 @@ public class HistoryCommand implements Command{
 	@Override
 	public void execute(String[] args){
 		EnterText(" --- HISTORY ---");
-		for(int i = 0;i<mathquizgame.MathQuizGame.inputtedLines.size();i++){
-			EnterText(mathquizgame.MathQuizGame.inputtedLines.get(i));
+		for(int i = 0;i<mathquizgame.MathQuizGame.frame.inputtedLines.size();i++){
+			EnterText(mathquizgame.MathQuizGame.frame.inputtedLines.get(i));
 		}
 		EnterText(" ---   END   ---");
 	}

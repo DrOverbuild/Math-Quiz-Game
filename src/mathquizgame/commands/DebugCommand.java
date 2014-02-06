@@ -6,6 +6,9 @@
 
 package mathquizgame.commands;
 
+import mathquizgame.DebugScreen;
+import mathquizgame.MathQuizGame;
+
 /**
  *
  * @author jasper
@@ -14,7 +17,16 @@ public class DebugCommand implements Command{
 
 	@Override
 	public void execute(String[] args){
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if(MathQuizGame.isDebugOn) MathQuizGame.isDebugOn = false;
+		else{
+			MathQuizGame.isDebugOn = true;
+			DebugScreen debugScreen = new DebugScreen();
+			debugScreen.setBounds(0, 0, debugScreen.getWidth(), debugScreen.getHeight());
+			MathQuizGame.frame.toFront();
+			Thread thread = new Thread(debugScreen);
+			thread.start();
+
+		}
 	}
 
 	@Override

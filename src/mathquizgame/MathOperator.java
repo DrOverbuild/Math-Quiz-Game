@@ -39,7 +39,7 @@ public class MathOperator {
 
 	public static void operate(int userAnswer){
 
-		if (MathQuizGame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
+		if (MathQuizGame.frame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
 			if (userAnswer == total){
 				EnterText("You are correct!");
 				MathQuizGame.score += pointsWorth;
@@ -70,7 +70,7 @@ public class MathOperator {
 
 	public static void operate(int userAnswer, boolean showCorrectMessage) {
 
-		if (MathQuizGame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
+		if (MathQuizGame.frame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
 			if (userAnswer == total){
 				if(showCorrectMessage) EnterText("You are correct!");
 				MathQuizGame.score += pointsWorth;
@@ -106,11 +106,11 @@ public class MathOperator {
 		if(MathQuizGame.getTimerRunning()){
 			MathQuizGame.timer.start();
 		}
-		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
+		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 		GenerateNewNumbers(0);
 		determineQuestionToAsk();
-		MathQuizGame.input.requestFocusInWindow();
-		MathQuizGame.input.selectAll();
+		MathQuizGame.frame.input.requestFocusInWindow();
+		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
 	}
 	public static void startGameMiddle(){
@@ -120,11 +120,11 @@ public class MathOperator {
 		if(MathQuizGame.getTimerRunning()){
 			MathQuizGame.timer.start();
 		}
-		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
+		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 		GenerateNewNumbers(1);
 		determineQuestionToAsk();
-		MathQuizGame.input.requestFocusInWindow();
-		MathQuizGame.input.selectAll();
+		MathQuizGame.frame.input.requestFocusInWindow();
+		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
 	}
 	public static void startGameHigh(){
@@ -134,18 +134,18 @@ public class MathOperator {
 		if(MathQuizGame.getTimerRunning()){
 			MathQuizGame.timer.start();
 		}
-		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
+		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 		GenerateNewNumbers(2);
 		determineQuestionToAsk();
-		MathQuizGame.input.requestFocusInWindow();
-		MathQuizGame.input.selectAll();
+		MathQuizGame.frame.input.requestFocusInWindow();
+		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
 	}
 	public static void startGameCustom(String[] customArgs) throws NumbersAreSameException{
 		resetFields();
 		setDifficulty(CUSTOM_DIFFICULTY);
 		EnterText("Starting a new game set in the Custom Difficulty.");
-		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
+		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 
 		int maxRangeLocal;
 		int minRangeLocal;
@@ -191,8 +191,8 @@ public class MathOperator {
 
 		GenerateNewNumbers(3);
 		determineQuestionToAsk();
-		MathQuizGame.input.requestFocusInWindow();
-		MathQuizGame.input.selectAll();
+		MathQuizGame.frame.input.requestFocusInWindow();
+		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
 	}
 
@@ -246,7 +246,7 @@ public class MathOperator {
 	}
 
 	private static void resetFields(){
-		MathQuizGame.numberOfTimesPlayed = 1;
+		MathQuizGame.frame.numberOfTimesPlayed = 1;
 		MathQuizGame.score = 0;
 		total = 0;
 		number1 = 0;
@@ -290,12 +290,12 @@ public class MathOperator {
 		}
 	}
 	private static void newNumbers(){
-		MathQuizGame.numberOfTimesPlayed += 1;
-		EnterText("Question #" + MathQuizGame.numberOfTimesPlayed);
+		MathQuizGame.frame.numberOfTimesPlayed += 1;
+		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 		GenerateNewNumbers(MathQuizGame.difficultyLevel);
 		determineQuestionToAsk();
-		MathQuizGame.input.requestFocusInWindow();
-		MathQuizGame.input.selectAll();
+		MathQuizGame.frame.input.requestFocusInWindow();
+		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
 	}
 }

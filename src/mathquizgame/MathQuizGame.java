@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -38,20 +40,27 @@ import mathquizgame.commands.CustomCommand;
 
 public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
+	public static MathQuizGame frame;
+
 	JScrollPane scrollPane;
 	JPanel inputPanel;
-	static JTextArea consoleMessages;
-	public static JTextField input;
-	static JButton enter;
+	public JTextArea consoleMessages;
+	public JTextField input;
+	JButton enter;
 	static CommandImpl commandParserAndExecuter;
 
-	public static ArrayList<String> inputtedLines;
-	static int indexArrayThing;
-	static String LastLine1;
+	public ArrayList<String> inputtedLines;
+	public int indexArrayThing;
+	public String LastLine1;
 
-	static int numberOfTimesPlayed;
+	public int numberOfTimesPlayed;
 	static float score;
 	static int difficultyLevel;
+	/**
+	 * This field stores what the program is waiting for when it waits for user input.
+	 */
+	static int state;
+	public static boolean isDebugOn;
 
 	static String currentFont;
 	static int currentSize;
@@ -70,10 +79,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static int customMinRange;
 	static char customOperation;
 
-	/**
-	 * This field stores what the program is waiting for when it waits for user input.
-	 */
-	static int state;
+
 
 	// State fields
 	public static final int VARIABLE_STATE = 0;
@@ -125,8 +131,33 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 							   @Override
 							   public void windowGainedFocus(WindowEvent e) {
 							   input.requestFocusInWindow();
+							   input.selectAll();
 							   }
 							   });
+
+		input.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				input.selectAll();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
@@ -180,6 +211,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 		timer = new timerControl(1000,false);
 
+		isDebugOn = false;
+
 		currentFont = "Courier";
 		currentSize = 12;
 		currentColor = Color.white;
@@ -210,17 +243,17 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	public static void EnterText(String input){
-		String str = consoleMessages.getText() + System.getProperty("line.separator") + input;
-		consoleMessages.setText(str);
-		LastLine1 = input;
+		String str = frame.consoleMessages.getText() + System.getProperty("line.separator") + input;
+		frame.consoleMessages.setText(str);
+		frame.LastLine1 = input;
 		printLineToFile(input);
 
 	}
 
 	public static void EnterText(String input, boolean doNotAddNewLine){
-		String str = consoleMessages.getText() + input;
-		consoleMessages.setText(str);
-		LastLine1 = input;
+		String str = frame.consoleMessages.getText() + input;
+		frame.consoleMessages.setText(str);
+		frame.LastLine1 = input;
 		printLineToFile(input);
 	}
 
@@ -333,7 +366,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	public static void main(String[] args) {
-		new MathQuizGame();
+		frame = new MathQuizGame();
 
 	}
 
@@ -346,13 +379,13 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		System.exit(0);
 	}
 	public static void clear(){
-		consoleMessages.setText("");
-		EnterText(LastLine1);
+		frame.consoleMessages.setText("");
+		EnterText(frame.LastLine1);
 	}
 	public static void setfont(String txt){
 
-		input.setFont(new java.awt.Font(txt, 0, currentSize));
-		consoleMessages.setFont(new java.awt.Font(txt,0, currentSize));
+		frame.input.setFont(new java.awt.Font(txt, 0, currentSize));
+		frame.consoleMessages.setFont(new java.awt.Font(txt,0, currentSize));
 		currentFont = txt;
 
 		EnterText("Font changed to " + txt);
@@ -360,8 +393,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public static void setsize(String txt){
 		try{
 			int newSize = Integer.parseInt(txt);
-			input.setFont(new java.awt.Font(currentFont, 0, newSize));
-			consoleMessages.setFont(new java.awt.Font(currentFont, 0, newSize));
+			frame.input.setFont(new java.awt.Font(currentFont, 0, newSize));
+			frame.consoleMessages.setFont(new java.awt.Font(currentFont, 0, newSize));
 			currentSize = newSize;
 
 			EnterText("Size set to " + newSize);
@@ -376,7 +409,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					EnterText("File cleared successfully!");
 				}
 			} catch (IOException ex) {
-				consoleMessages.append("\nError: File could not be recreated.");
+				frame.consoleMessages.append("\nError: File could not be recreated.");
 			}
 		}else{
 			EnterText("Error: File could not be cleared.");

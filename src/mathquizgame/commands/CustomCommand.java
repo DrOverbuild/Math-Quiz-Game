@@ -24,7 +24,7 @@ public class CustomCommand implements Command{
 		}catch(NumbersAreSameException e){
 			EnterText("The numbers used in the range must not be the same. Please pick different ones.");
 			setQuestionState(1);
-			mathquizgame.MathQuizGame.input.selectAll();
+			mathquizgame.MathQuizGame.frame.input.selectAll();
 		}
 	}
 
