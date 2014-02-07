@@ -8,17 +8,24 @@ package mathquizgame.commands;
 
 
 public class CommandImpl{
-	public static final ChangeBackgroundCommand changeBackgroundCommand = new ChangeBackgroundCommand();
-	public static final ClearCommand            clearCommand            = new ClearCommand();
-	public static final ClearFileCommand		clearFileCommand		= new ClearFileCommand();
-	public static final DebugCommand			debugCommand			= new DebugCommand();
-	public static final HelpCommand				helpCommand				= new HelpCommand();
-	public static final HistoryCommand			historyCommand			= new HistoryCommand();
-	public static final QuitCommand				quitCommand				= new QuitCommand();
-	public static final RestartCommand			restartCommand			= new RestartCommand();
-	public static final SayCommand				sayCommand				= new SayCommand();
-	public static final SetFontCommand			setFontCommand			= new SetFontCommand();
-	public static final SetSizeCommand			setSizeCommand			= new SetSizeCommand();
+	/**
+	 * This field stores all commands available to execute in a MathQuizGame instance. To add a new command,
+	 * all that has to be done is add a new Object that implements the Command interface to this array. It
+	 * might be helpful to have the class which implements the Command interface in a separate file and not as
+	 * a nested class.
+	 */
+	public static Command[] commands = new Command[]{
+		new ChangeBackgroundCommand(),
+		new ClearCommand(),
+		new ClearFileCommand(),
+		new DebugCommand(),
+		new HelpCommand(),
+		new HistoryCommand(),
+		new QuitCommand(),
+		new RestartCommand(),
+		new SayCommand(),
+		new SetFontCommand(),
+		new SetSizeCommand()};
 
 	public void parseAndExecuteCommand(String txt) throws CommandNotFoundException{
 
@@ -27,18 +34,6 @@ public class CommandImpl{
 		commandName = commandName.toLowerCase();
 
 		Command command = null;
-		Command[] commands = new Command[11];
-		commands[0] = changeBackgroundCommand;
-		commands[1] = clearCommand;
-		commands[2] = clearFileCommand;
-		commands[3] = debugCommand;
-		commands[4] = helpCommand;
-		commands[5] = historyCommand;
-		commands[6] = quitCommand;
-		commands[7] = restartCommand;
-		commands[8] = sayCommand;
-		commands[9] = setFontCommand;
-		commands[10]= setSizeCommand;
 
 		for (Command command1 : commands) {
 			if (commandIsEqualTo(command1, commandName)) command = command1;
@@ -61,7 +56,7 @@ public class CommandImpl{
 		if (userInput.equals("/"+command)) {
 			argument = "";
 		}else{
-			int lengthOfCommand = command.length() + 2;
+			int lengthOfCommand = ("/"+command).length() + 1;
 			int lengthOfUserInput = userInput.length();
 			int lengthOfArgument = lengthOfUserInput - lengthOfCommand;
 			char[] toCharArray = userInput.toCharArray();

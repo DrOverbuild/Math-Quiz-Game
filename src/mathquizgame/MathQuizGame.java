@@ -319,15 +319,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					MathOperator.startGameHigh();
 				}else if ((txtToLowerCase.startsWith("custom ")&&!txtToLowerCase.equals("custom ")) ||
 					      (txtToLowerCase.startsWith("c ")&&!txtToLowerCase.equals("c "))){
-
-					String[] customArgs;
-					if(txtToLowerCase.startsWith("custom ")){
-						customArgs = CommandImpl.parseArgs("c", txt);
-					}else{
-						customArgs = CommandImpl.parseArgs("c", txt);
-					}
-
-					new CustomCommand().execute(customArgs);
+					new CustomCommand().execute(CommandImpl.parseArgs(txtToLowerCase.split(" ")[0], "/" + txt));
 				}else if(txtToLowerCase.startsWith("custom") || txtToLowerCase.startsWith("c")){
 					EnterText("----------------------");
 					EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
