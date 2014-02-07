@@ -17,4 +17,6 @@ public interface Command {
 	public abstract String getName();
 	public abstract String getShortcut();
 
+	public String getDesc();
+
 }

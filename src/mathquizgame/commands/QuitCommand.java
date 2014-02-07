@@ -28,4 +28,9 @@ public class QuitCommand implements Command{
 		return "n";
 	}
 
+	@Override
+	public String getDesc() {
+		return "/quit (or n): Quits the game.";
+	}
+
 }

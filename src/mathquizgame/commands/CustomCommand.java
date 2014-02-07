@@ -38,5 +38,11 @@ public class CustomCommand implements Command{
 		return "c";
 	}
 
+	@Override
+	public String getDesc() {
+		return "";
+	}
+
+
 
 }

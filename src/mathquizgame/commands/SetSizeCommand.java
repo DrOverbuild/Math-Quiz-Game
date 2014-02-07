@@ -27,4 +27,9 @@ public class SetSizeCommand implements Command{
 		return "size";
 	}
 
+	@Override
+	public String getDesc() {
+		return "/setsize <size>: Sets the size to <size>. <size> must be a number.";
+	}
+
 }

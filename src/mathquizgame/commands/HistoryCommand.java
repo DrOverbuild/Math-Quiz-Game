@@ -33,4 +33,9 @@ public class HistoryCommand implements Command{
 		return "displayhistory";
 	}
 
+	@Override
+	public String getDesc() {
+		return "/history: Shows you everything you've typed in since you opened the game.";
+	}
+
 }

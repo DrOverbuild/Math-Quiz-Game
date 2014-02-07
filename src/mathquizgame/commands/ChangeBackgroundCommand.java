@@ -27,4 +27,9 @@ public class ChangeBackgroundCommand implements Command{
 		return "setcolor";
 	}
 
+	@Override
+	public String getDesc() {
+		return "/changebackground: Sets the background color of the output panel and the text box.";
+	}
+
 }

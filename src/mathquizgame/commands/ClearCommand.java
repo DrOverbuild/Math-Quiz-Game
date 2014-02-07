@@ -14,7 +14,7 @@ public class ClearCommand implements Command{
 
 	@Override
 	public void execute(String[] args){
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		mathquizgame.MathQuizGame.clear();
 	}
 
 	@Override
@@ -25,6 +25,11 @@ public class ClearCommand implements Command{
 	@Override
 	public String getShortcut() {
 		return "clr";
+	}
+
+	@Override
+	public String getDesc() {
+		return "/clear (or /clr): Clears the output.";
 	}
 
 }

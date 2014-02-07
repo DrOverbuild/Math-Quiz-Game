@@ -72,7 +72,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	// Fields for File management
 	static File logDirectory;
 	static File log;
-	static String logFilePath;
+	public static String logFilePath;
 
 	// Fields for custom difficulty level
 	static int customMaxRange;
@@ -361,7 +361,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 	public static void clear(){
 		frame.consoleMessages.setText("");
-		EnterText(frame.LastLine1);
 	}
 	public static void setfont(String txt){
 

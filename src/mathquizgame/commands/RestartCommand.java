@@ -27,4 +27,9 @@ public class RestartCommand implements Command {
 		return "y";
 	}
 
+	@Override
+	public String getDesc() {
+		return "/restart (or y): Ends current game and asks you to choose a difficulty level again.";
+	}
+
 }

@@ -27,4 +27,9 @@ public class SetFontCommand implements Command{
 		return "font";
 	}
 
+	@Override
+	public String getDesc() {
+		return "/setfont <font>: Sets the font of the output and input to <font>";
+	}
+
 }

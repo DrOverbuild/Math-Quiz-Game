@@ -34,4 +34,9 @@ public class SayCommand implements Command {
 	public String getShortcut() {
 		return "say";
 	}
+
+	@Override
+	public String getDesc() {
+		return "/say <msg>: Displays <msg> to the screen.";
+	}
 }

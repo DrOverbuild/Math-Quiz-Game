@@ -6,6 +6,8 @@
 
 package mathquizgame.commands;
 
+import mathquizgame.MathQuizGame;
+
 /**
  *
  * @author jasper
@@ -25,6 +27,12 @@ public class ClearFileCommand implements Command{
 	@Override
 	public String getShortcut() {
 		return "clearfile";
+	}
+
+	@Override
+	public String getDesc() {
+		return "/clearfile: Clears " + MathQuizGame.logFilePath;
+
 	}
 
 }

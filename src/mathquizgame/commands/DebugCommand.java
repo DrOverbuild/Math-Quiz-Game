@@ -44,4 +44,9 @@ public class DebugCommand implements Command{
 		return "no shortcut";
 	}
 
+	@Override
+	public String getDesc() {
+		return "/debug: Displays a window showing you some technical stuff that happens behind the scenes.";
+	}
+
 }
