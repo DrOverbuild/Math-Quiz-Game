@@ -14,7 +14,8 @@ public class HelpCommand implements Command {
 
 	@Override
 	public void execute(String[] args){
-		MathQuizGame.EnterText(System.getProperty("line.separator")+"Here is a list of all the commands you can use.");
+		MathQuizGame.EnterText("");
+		MathQuizGame.EnterText("Here is a list of all the commands you can use.");
 		for(Command command:CommandImpl.commands){
 			MathQuizGame.EnterText(command.getDesc());
 		}
