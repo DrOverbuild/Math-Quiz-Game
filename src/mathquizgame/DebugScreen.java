@@ -25,6 +25,7 @@ public class DebugScreen extends JPanel implements Runnable{
 	JLabel difficultyLevel = new JLabel(MathQuizGame.difficultyLevel+"",JLabel.RIGHT);
 	JLabel state = new JLabel(MathQuizGame.state+"",JLabel.RIGHT);
 	JLabel isDebugOn = new JLabel(MathQuizGame.isDebugOn+"",JLabel.RIGHT);
+	JLabel automaticText = new JLabel(MathQuizGame.automaticText+"",JLabel.RIGHT);
 	JLabel currentFont = new JLabel(MathQuizGame.currentFont+"",JLabel.RIGHT);
 	JLabel currentSize = new JLabel(MathQuizGame.currentSize+"",JLabel.RIGHT);
 	JLabel timerRunning = new JLabel(MathQuizGame.timerRunning+"",JLabel.RIGHT);
@@ -46,7 +47,7 @@ public class DebugScreen extends JPanel implements Runnable{
 
 		this.frame = frame;
 
-		setLayout(new GridLayout(21,2));
+		setLayout(new GridLayout(22,2));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		add(new JLabel("MathQuizGame.indexArrayThing: "));
@@ -63,6 +64,8 @@ public class DebugScreen extends JPanel implements Runnable{
 		add(state);
 		add(new JLabel("MathQuizGame.isDebugOn: "));
 		add(isDebugOn);
+		add(new JLabel("MathQuizGame.automaticText: "));
+		add(automaticText);
 		add(new JLabel("MathQuizGame.currentFont: "));
 		add(currentFont);
 		add(new JLabel("MathQuizGame.currentSize: "));
@@ -111,6 +114,7 @@ public class DebugScreen extends JPanel implements Runnable{
 			difficultyLevel.setText(MathQuizGame.difficultyLevel+"");
 			state.setText(MathQuizGame.state+"");
 			isDebugOn.setText(MathQuizGame.isDebugOn+"");
+			automaticText.setText(MathQuizGame.automaticText+"");
 			currentFont.setText(MathQuizGame.currentFont);
 			currentSize.setText(MathQuizGame.currentSize+"");
 			timerRunning.setText(MathQuizGame.timerRunning+"");

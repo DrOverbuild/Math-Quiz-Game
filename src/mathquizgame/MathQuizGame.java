@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -61,6 +63,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	 */
 	static int state;
 	public static boolean isDebugOn;
+	public static boolean automaticText;
 
 	static String currentFont;
 	static int currentSize;
@@ -193,7 +196,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		if(!log.exists()){
 			try{
 				wasCreated = log.createNewFile();
-				EnterText("File " + logFilePath + " created successfully.",true);
+				// EnterText("File " + logFilePath + " created successfully.",true); // NullPointerException. Fix:
+				consoleMessages.append("File " + logFilePath + " created successfully.");
 			}catch(SecurityException | IOException e){
 			}
 		}
@@ -237,7 +241,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	public static void EnterText(String input){
-		String str = frame.consoleMessages.getText() + System.getProperty("line.separator") + input;
+		String str = frame.consoleMessages.getText() + input + System.getProperty("line.separator");
 		frame.consoleMessages.setText(str);
 		frame.LastLine1 = input;
 		printLineToFile(input);
@@ -279,69 +283,76 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	 * This method is called when user presses enter on the keyboard or clicks the enter button on the UI.
 	 */
 	public void somethingHappened(){
+		try{
+			String txt;
+			String txtToLowerCase;
+			txt = input.getText();
+			txtToLowerCase = txt.toLowerCase();
+			inputtedLines.add(txt);
+			indexArrayThing=inputtedLines.size()-1;
 
-		String txt;
-		String txtToLowerCase;
-		txt = input.getText();
-		txtToLowerCase = txt.toLowerCase();
-		inputtedLines.add(txt);
-		indexArrayThing=inputtedLines.size()-1;
+			input.selectAll();
+			input.requestFocus();
 
-		input.selectAll();
-		input.requestFocus();
-
-		if (txtToLowerCase.startsWith("/")){
-			try {
-				commandParserAndExecuter.parseAndExecuteCommand(txt);
-			} catch (CommandNotFoundException ex) {
-				EnterText("Command not found.");
-			}
-		}else if(txtToLowerCase.equals("y")) restart();
-		else if(txtToLowerCase.equals("n")) quit();
-		else{
-			if (state == VARIABLE_STATE){
-				try{
-					int inputValue = Integer.parseInt(input.getText());
-					EnterText(" " + txt,true);
-					MathOperator.operate(inputValue);
-					input.requestFocusInWindow();
-					input.selectAll();
-				} catch (NumberFormatException e){
-					EnterText("Please type a number or one of the commands available.");
-					input.selectAll();
+			if (txtToLowerCase.startsWith("/")){
+				try {
+					commandParserAndExecuter.parseAndExecuteCommand(txt);
+				} catch (CommandNotFoundException ex) {
+					EnterText("Command not found.");
 				}
-			}else if(state == DIFFICULTY_CHANGING_STATE){
-				if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
-					MathOperator.startGameElementary();
-				}else if (txtToLowerCase.equals("middle school") || txtToLowerCase.equals("m")){
-					MathOperator.startGameMiddle();
-				}else if(txtToLowerCase.equals("high school") || txtToLowerCase.equals("h")){
-					MathOperator.startGameHigh();
-				}else if ((txtToLowerCase.startsWith("custom ")&&!txtToLowerCase.equals("custom ")) ||
-					      (txtToLowerCase.startsWith("c ")&&!txtToLowerCase.equals("c "))){
-					new CustomCommand().execute(CommandImpl.parseArgs(txtToLowerCase.split(" ")[0], "/" + txt));
-				}else if(txtToLowerCase.startsWith("custom") || txtToLowerCase.startsWith("c")){
-					EnterText("----------------------");
-					EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
-					EnterText("custom 50 10 x 10");
-					EnterText("OR: c 50 10 x 10");
-					EnterText("While 50 is the maximum, 10 is the minimum, x is the operation to use, and the game will ask 10 questions.");
-					EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"x\" (multiply)");
-					setQuestionState(1);
-					input.selectAll();
-				}else if(txtToLowerCase.startsWith("/setuptimer ") || txtToLowerCase.startsWith("/timer ")){
-					setupTimer(txt);
+			}else if(txtToLowerCase.equals("y")) restart();
+			else if(txtToLowerCase.equals("n")) quit();
+			else{
+				if (state == VARIABLE_STATE){
+					try{
+						int inputValue = Integer.parseInt(input.getText());
+						EnterText(" " + txt,true);
+						MathOperator.operate(inputValue);
+						input.requestFocusInWindow();
+						input.selectAll();
+					} catch (NumberFormatException e){
+						EnterText("Please type a number or one of the commands available.");
+						input.selectAll();
+					}
+				}else if(state == DIFFICULTY_CHANGING_STATE){
+					if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
+						MathOperator.startGameElementary();
+					}else if (txtToLowerCase.equals("middle school") || txtToLowerCase.equals("m")){
+						MathOperator.startGameMiddle();
+					}else if(txtToLowerCase.equals("high school") || txtToLowerCase.equals("h")){
+						MathOperator.startGameHigh();
+					}else if ((txtToLowerCase.startsWith("custom ")&&!txtToLowerCase.equals("custom ")) ||
+							  (txtToLowerCase.startsWith("c ")&&!txtToLowerCase.equals("c "))){
+						new CustomCommand().execute(CommandImpl.parseArgs(txtToLowerCase.split(" ")[0], "/" + txt));
+					}else if(txtToLowerCase.startsWith("custom") || txtToLowerCase.startsWith("c")){
+						EnterText("----------------------");
+						EnterText("When choosing custom, please specify the maximum number, minimum number, operation to use, and number of questions you want to answer. Example:");
+						EnterText("custom 50 10 x 10");
+						EnterText("OR: c 50 10 x 10");
+						EnterText("While 50 is the maximum, 10 is the minimum, x is the operation to use, and the game will ask 10 questions.");
+						EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"x\" (multiply)");
+						setQuestionState(1);
+						input.selectAll();
+					}else if(txtToLowerCase.startsWith("/setuptimer ") || txtToLowerCase.startsWith("/timer ")){
+						setupTimer(txt);
+					}else{
+						EnterText("That is not available at the time. Please choose a difficulty level.");
+						input.requestFocusInWindow();
+						input.selectAll();
+						setQuestionState(1);
+					}
+				}else if (state == END_OF_GAME_STATE){
+					EnterText("That is not available at the time. Please choose whether you want to play again or not.");
 				}else{
-					EnterText("That is not available at the time. Please choose a difficulty level.");
-					input.requestFocusInWindow();
-					input.selectAll();
-					setQuestionState(1);
+					EnterText("Error: State not defined. Please report this bug to http://sourceforge.net/projects/mathquizgame/tickets/");
 				}
-			}else if (state == END_OF_GAME_STATE){
-				EnterText("That is not available at the time. Please choose whether you want to play again or not.");
-			}else{
-				EnterText("Error: State not defined. Please report this bug to http://sourceforge.net/projects/mathquizgame/tickets/");
 			}
+		}catch(Exception e){
+			printLineToFile("[ERROR] " + e.toString());
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An error has occured. Restarting round.", "Error", JOptionPane.ERROR_MESSAGE);
+			input.setText("y");
+			somethingHappened();
 		}
 	}
 
@@ -435,7 +446,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -467,10 +479,19 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {}
-
-	public static void main(String[] args) {
-		frame = new MathQuizGame();
-		frame.launch();
+	public void keyReleased(KeyEvent e) {
+		String getText = input.getText();
+		String answer = "" + MathOperator.total;
+		if(getText.equals(answer) && automaticText) somethingHappened();}
+	public static void main(String[] args) throws FileNotFoundException {
+		try{
+			frame = new MathQuizGame();
+			frame.launch();
+		}catch(Exception e){
+			printLineToFile("[ERROR] " + e.toString());
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An error has occured while launching game.", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
 
 	}}

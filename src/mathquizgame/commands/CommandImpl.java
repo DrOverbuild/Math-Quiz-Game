@@ -15,6 +15,7 @@ public class CommandImpl{
 	 * a nested class.
 	 */
 	public static Command[] commands = new Command[]{
+		new AutomaticTextCommand(),
 		new ChangeBackgroundCommand(),
 		new ClearCommand(),
 		new ClearFileCommand(),
