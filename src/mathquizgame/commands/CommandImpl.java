@@ -26,7 +26,8 @@ public class CommandImpl{
 		new RestartCommand(),
 		new SayCommand(),
 		new SetFontCommand(),
-		new SetSizeCommand()};
+		new SetSizeCommand(),
+		new SystemInfoCommand()};
 
 	public void parseAndExecuteCommand(String txt) throws CommandNotFoundException{
 

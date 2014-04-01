@@ -387,6 +387,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			frame.input.setFont(new java.awt.Font(currentFont, 0, newSize));
 			frame.consoleMessages.setFont(new java.awt.Font(currentFont, 0, newSize));
 			currentSize = newSize;
+			frame.pack();
 
 			EnterText("Size set to " + newSize);
 		}catch(NumberFormatException e){

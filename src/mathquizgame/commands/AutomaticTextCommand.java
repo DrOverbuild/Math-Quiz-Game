@@ -30,7 +30,7 @@ public class AutomaticTextCommand implements Command{
 
 	@Override
 	public String getDesc() {
-		return "Toggles the ability to not have to press enter when the correct answer is compeletely typed.";
+		return "/autotext: Toggles the ability to not have to press enter when the correct answer is compeletely typed.";
 	}
 
 }

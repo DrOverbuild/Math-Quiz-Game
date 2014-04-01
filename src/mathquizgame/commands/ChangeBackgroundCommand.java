@@ -14,7 +14,7 @@ public class ChangeBackgroundCommand implements Command{
 
 	@Override
 	public void execute(String[] args){
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		mathquizgame.MathQuizGame.frame.changeBackground();
 	}
 
 	@Override
