@@ -4,8 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/Users/jasper/Desktop/developer/java/NetBeansProjects/MathQuizGame/src/mathquizgame/MathOperator.java</file>
+            <file>file:/Users/jasper/Desktop/developer/java/NetBeansProjects/MathQuizGame/src/mathquizgame/commands/CommandImpl.java</file>
             <file>file:/Users/jasper/Desktop/developer/java/NetBeansProjects/MathQuizGame/src/mathquizgame/DebugScreen.java</file>
+            <file>file:/Users/jasper/Desktop/developer/java/NetBeansProjects/MathQuizGame/src/mathquizgame/commands/TimerCommand.java</file>
+            <file>file:/Users/jasper/Desktop/developer/java/NetBeansProjects/MathQuizGame/src/mathquizgame/commands/AutomaticTextCommand.java</file>
             <file>file:/Users/jasper/Desktop/developer/java/NetBeansProjects/MathQuizGame/src/mathquizgame/MathQuizGame.java</file>
+            <file>file:/Users/jasper/Desktop/developer/java/NetBeansProjects/MathQuizGame/src/mathquizgame/timerControl.java</file>
         </group>
     </open-files>
 </project-private>

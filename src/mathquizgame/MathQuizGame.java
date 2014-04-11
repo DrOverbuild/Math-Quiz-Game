@@ -61,7 +61,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	/**
 	 * This field stores what the program is waiting for when it waits for user input.
 	 */
-	static int state;
+	public static int state;
 	public static boolean isDebugOn;
 	public static boolean automaticText;
 
@@ -69,8 +69,8 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static int currentSize;
 	static Color currentColor;
 
-	static timerControl timer;
-	static boolean timerRunning;
+	public static timerControl timer;
+	public static boolean timerRunning;
 
 	// Fields for File management
 	static File logDirectory;
@@ -210,8 +210,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 		printLineToFile("-------------------");
 		printLineToFile("Date: " + date + " at " + sdf.format(cal.getTime()));
-
-		timer = new timerControl(1000,false);
 
 		isDebugOn = false;
 

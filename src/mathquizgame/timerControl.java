@@ -8,12 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
-final class timerControl implements ActionListener{
+public final class timerControl implements ActionListener{
 	Timer timer;
-	timerControl(int millisec, boolean repeats){
-		System.out.println("Creating new timer.");
+	public timerControl(int millisec){
 		timer = new Timer(millisec, this);
-		timer.setRepeats(repeats);
+		timer.setRepeats(false);
 	}
 	public void start(){
 		timer.start();
@@ -27,12 +26,12 @@ final class timerControl implements ActionListener{
 	public void setInitialDelay(int delay){
 		timer.setInitialDelay(delay);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int secs = timer.getInitialDelay() / 1000;
 		MathQuizGame.EnterText("\nTimer reached " + secs + " seconds.");
 		MathQuizGame.endGame();
 	}
-	
+
 }

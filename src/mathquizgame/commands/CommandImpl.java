@@ -27,7 +27,8 @@ public class CommandImpl{
 		new SayCommand(),
 		new SetFontCommand(),
 		new SetSizeCommand(),
-		new SystemInfoCommand()};
+		new SystemInfoCommand(),
+		new TimerCommand()};
 
 	public void parseAndExecuteCommand(String txt) throws CommandNotFoundException{
 
@@ -65,7 +66,7 @@ public class CommandImpl{
 			argument = String.copyValueOf(toCharArray, lengthOfCommand, lengthOfArgument);
 		}
 
-		String[] splitted = argument.split("\\s");
+		String[] splitted = (argument.equals("")) ? new String[]{}:argument.split("\\s"); // I just LOVE the ? operator!
 
 		return splitted;
 
