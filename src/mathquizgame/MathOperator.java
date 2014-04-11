@@ -202,6 +202,10 @@ public class MathOperator {
 		MathQuizGame.EnterText(txt);
 	}
 
+	private static void EnterText(String txt, boolean torf){
+		MathQuizGame.EnterText(txt, torf);
+	}
+
 	private static void GenerateNewNumbers(int difficulty){
 		switch (difficulty) {
 			case 0:
@@ -280,13 +284,13 @@ public class MathOperator {
 	private static void determineQuestionToAsk(){
 		if(operationToUse == '+'){
 			total = number1 + number2;
-			EnterText("What is " + number1 + " + " + number2 + "?");
+			EnterText("What is " + number1 + " + " + number2 + "?", true);
 		}else if (operationToUse == '-'){
 			total = number1 - number2;
-			EnterText("What is " + number1 + " - " + number2 + "?");
+			EnterText("What is " + number1 + " - " + number2 + "?", true);
 		}else{
 			total = number1 * number2;
-			EnterText("What is " + number1 + " x " + number2 + "?");
+			EnterText("What is " + number1 + " x " + number2 + "?", true);
 		}
 	}
 	private static void newNumbers(){

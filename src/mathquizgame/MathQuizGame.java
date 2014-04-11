@@ -82,8 +82,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static int customMinRange;
 	static char customOperation;
 
-
-
 	// State fields
 	public static final int VARIABLE_STATE = 0;
 	public static final int DIFFICULTY_CHANGING_STATE = 1;
@@ -306,11 +304,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				if (state == VARIABLE_STATE){
 					try{
 						int inputValue = Integer.parseInt(input.getText());
-						EnterText(" " + txt,true);
+						EnterText(" " + txt);
 						MathOperator.operate(inputValue);
 						input.requestFocusInWindow();
 						input.selectAll();
-					} catch (NumberFormatException e){
+					} catch (NumberFormatException e){ // User typed something that wasn't a command or a number
 						EnterText("Please type a number or one of the commands available.");
 						input.selectAll();
 					}

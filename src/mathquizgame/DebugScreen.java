@@ -47,6 +47,8 @@ public class DebugScreen extends JPanel implements Runnable{
 
 		this.frame = frame;
 
+		frame.setAlwaysOnTop(true);
+
 		setLayout(new GridLayout(22,2));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 
