@@ -196,8 +196,6 @@ public class MathOperator {
 		MathQuizGame.setQuestionState(0);
 	}
 
-
-
 	private static void EnterText(String txt){
 		MathQuizGame.EnterText(txt);
 	}
@@ -301,5 +299,20 @@ public class MathOperator {
 		MathQuizGame.frame.input.requestFocusInWindow();
 		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
+	}
+	
+	public static int randomInt(int minRange, int maxRange){
+		return randomInt(minRange, maxRange, true);
+	}
+	
+	public static int randomInt(int minRange, int maxRange, boolean canBeZero){
+		int result = generator.nextInt(maxRange+1) - minRange;
+		
+		while(result==0){
+			// Try again to get a random number until result is not zero
+			result = generator.nextInt(maxRange+1) - minRange;
+		}
+		
+		return result;
 	}
 }

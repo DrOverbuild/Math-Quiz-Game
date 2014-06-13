@@ -28,6 +28,7 @@ public class CommandImpl{
 		new SetFontCommand(),
 		new SetSizeCommand(),
 		new SystemInfoCommand(),
+		new TestMethodCommand(),
 		new TimerCommand()};
 
 	public void parseAndExecuteCommand(String txt) throws CommandNotFoundException{
@@ -55,7 +56,7 @@ public class CommandImpl{
 
 	public static String[] parseArgs(String command, String userInput){
 
-		String argument = null;
+		String argument;
 		if (userInput.equals("/"+command)) {
 			argument = "";
 		}else{
