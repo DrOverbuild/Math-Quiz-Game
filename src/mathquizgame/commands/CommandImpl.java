@@ -49,8 +49,8 @@ public class CommandImpl{
 	}
 
 	public static boolean commandIsEqualTo(Command cmd, String txt){
-		boolean getNameEquals = cmd.getName().equals(txt);
-		boolean getShortcutEquals = cmd.getShortcut().equals(txt);
+		boolean getNameEquals = cmd.getName().equalsIgnoreCase(txt);
+		boolean getShortcutEquals = cmd.getShortcut().equalsIgnoreCase(txt);
 		return getNameEquals || getShortcutEquals;
 	}
 
