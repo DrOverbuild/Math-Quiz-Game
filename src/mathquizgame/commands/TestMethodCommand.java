@@ -5,7 +5,7 @@
 
 package mathquizgame.commands;
 
-import mathquizgame.*;
+import mathquizgame.MathQuizGame;
 
 /**
  *
@@ -15,7 +15,6 @@ public class TestMethodCommand implements Command{
 
 	@Override
 	public void execute(String[] args) {
-		//MathQuizGame.EnterText(""+MathOperator.randomInt(20, 40, false));
 		MathQuizGame.EnterText("Nothing to test!");
 	}
 
