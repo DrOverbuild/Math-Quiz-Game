@@ -233,9 +233,17 @@ public class MathOperator {
 				pointsWorth = 10;
 				break;
 			case 3:
-				number1 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
-				number2 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
 				operationToUse = randomOp(customOperations.toCharArray());
+				if(operationToUse == '/'){
+					//number1 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
+					//number2 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
+					number1 = randomInt(customMinRange, customMaxRange, true, true);
+					number2 = randomInt(customMinRange, customMaxRange, false);
+					// This loop should prevent answer from being a fraction. If this isn't the case, call me maybe.
+					while(number1%number2 == 0){
+						number2 = randomInt(customMinRange, customMaxRange, false);
+					}
+				}
 				break;
 			default:
 				EnterText("Error: Difficulty out of range: " + difficulty);
@@ -314,5 +322,35 @@ public class MathOperator {
 		}
 		
 		return result;
+	}
+	
+	public static int randomInt(int minRange, int maxRange, boolean canBeZero, boolean canBePrime) {
+		int result = generator.nextInt(maxRange+1) - minRange;
+		if(!canBeZero&&!canBePrime){
+			while(result==0||!numberIsPrime(result)){
+				result = generator.nextInt(maxRange+1) - minRange;
+			}
+		} else if(!canBeZero){
+			while(result==0){
+				result = generator.nextInt(maxRange+1) - minRange;
+			}
+		}else if(!canBePrime){
+			while(!numberIsPrime(result)){
+				result = generator.nextInt(maxRange+1) - minRange;
+			}
+		}
+		return result;
+	}
+	
+	public static boolean numberIsPrime(int number){
+		int sumOfFactors = 0;
+		for (int i = 1; i<= number/2; i++){
+			if (number%i == 0) {
+				sumOfFactors += i;
+			}
+		}
+		sumOfFactors+=number;
+		
+		return sumOfFactors==number+1;
 	}
 }
