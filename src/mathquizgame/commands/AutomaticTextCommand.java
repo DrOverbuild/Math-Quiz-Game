@@ -14,8 +14,18 @@ public class AutomaticTextCommand implements Command{
 
 	@Override
 	public void execute(String[] args) {
-		mathquizgame.MathQuizGame.automaticText = !mathquizgame.MathQuizGame.automaticText;
-		mathquizgame.MathQuizGame.EnterText("Automatic Text toggled.");
+		if (args.length != 1){
+			mathquizgame.MathQuizGame.automaticText = !mathquizgame.MathQuizGame.automaticText;
+			mathquizgame.MathQuizGame.EnterText("Automatic Text now is " + mathquizgame.MathQuizGame.automaticText);
+		}else{
+			if (args[0].toLowerCase().startsWith("t")){
+				mathquizgame.MathQuizGame.automaticText = true;
+				mathquizgame.MathQuizGame.EnterText("Automatic Text now is true");
+			}else if (args[0].toLowerCase().startsWith("f")){
+				mathquizgame.MathQuizGame.automaticText = false;
+				mathquizgame.MathQuizGame.EnterText("Automatic Text now is false");
+			}
+		}
 	}
 
 	@Override
