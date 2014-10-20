@@ -289,8 +289,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			String txt = input.getText();
 			String txtToLowerCase = txt.toLowerCase();
 
-			if(!inputtedLines.get(inputtedLines.size()-1).equals(txt)){
-			    inputtedLines.add(txt);
+			if(inputtedLines.size()>0){
+				if(!inputtedLines.get(inputtedLines.size()-1).equals(txt)){
+					inputtedLines.add(txt);
+				}
+			}else{
+				inputtedLines.add(txt);
 			}
 
 			indexArrayThing=inputtedLines.size()-1;
@@ -454,25 +458,17 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_UP){
 			e.consume();
-			if(indexArrayThing == 0){
-				input.requestFocus();
-				input.selectAll();
-			}else if(indexArrayThing > 0){
+			if(indexArrayThing > 0){
 				indexArrayThing--;
 				input.setText(inputtedLines.get(indexArrayThing));
-				input.requestFocus();
-				input.selectAll();
+				inputRequestsFocus();
 			}
 		}else if(e.getKeyCode() == KeyEvent.VK_DOWN){
 			e.consume();
-			if(indexArrayThing == inputtedLines.size()-1){
-				input.requestFocus();
-				input.selectAll();
-			}else if(indexArrayThing < inputtedLines.size()-1){
+			if(indexArrayThing < inputtedLines.size()-1){
 				indexArrayThing++;
 				input.setText(inputtedLines.get(indexArrayThing));
-				input.requestFocus();
-				input.selectAll();
+				inputRequestsFocus();
 			}
 		}else{
 			indexArrayThing = inputtedLines.size();
@@ -481,9 +477,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		String getText = input.getText();
-		String answer = "" + MathOperator.total;
-		if(getText.equals(answer) && automaticText) somethingHappened();}
+		if(input.getText().equals(MathOperator.total+"") && automaticText){
+			somethingHappened();
+		}
+	}
+
 	public static void main(String[] args) throws FileNotFoundException {
 		try{
 			frame = new MathQuizGame();
