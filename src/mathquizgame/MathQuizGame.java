@@ -285,9 +285,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	 * This method is called when user presses enter on the keyboard or clicks the enter button on the UI.
 	 */
 	public void somethingHappened(){
+		
 		try{
 			String txt = input.getText();
 			String txtToLowerCase = txt.toLowerCase();
+			
+			EnterText(" " + txt);
 
 			if(inputtedLines.size()>0){
 				if(!inputtedLines.get(inputtedLines.size()-1).equals(txt)){
@@ -313,7 +316,6 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 				if (state == VARIABLE_STATE){
 					try{
 						int inputValue = Integer.parseInt(input.getText());
-						EnterText(" " + txt);
 						MathOperator.operate(inputValue);
 						inputRequestsFocus();
 					} catch (NumberFormatException e){ // User typed something that wasn't a command or a number
