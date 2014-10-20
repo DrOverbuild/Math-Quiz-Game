@@ -336,7 +336,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 						EnterText("custom 50 10 x 10");
 						EnterText("OR: c 50 10 x 10");
 						EnterText("While 50 is the maximum, 10 is the minimum, x is the operation to use, and the game will ask 10 questions.");
-						EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"x\" (multiply)");
+						EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"x\" (multiply) \"/\" (divide)");
 						setQuestionState(1);
 						inputRequestsFocus();
 					}else if(txtToLowerCase.startsWith("/setuptimer ") || txtToLowerCase.startsWith("/timer ")){

@@ -207,13 +207,18 @@ public class MathOperator {
 				break;
 			case 3:
 				operationToUse = randomOp(customOperations.toCharArray());
-				number1 = randomInt(customMinRange, customMaxRange, true, true);
+				number1 = randomInt(customMinRange, customMaxRange, true);
 				number2 = randomInt(customMinRange, customMaxRange, false);
 
 				if(operationToUse == '/'){
 					// This loop should prevent answer from being a fraction. If this isn't the case, call me maybe.
-					while(number1%number2 == 0){
-						number2 = randomInt(customMinRange, customMaxRange, false);
+					while(true){
+						if(number1%number2 == 0 && number1 > number2){
+							break;
+						}else{
+							number1 = randomInt(customMinRange, customMaxRange, false);
+							number2 = randomInt(customMinRange, customMaxRange, false);
+						}
 					}
 				}
 				break;
@@ -235,33 +240,6 @@ public class MathOperator {
 		number2 = 0;
 	}
 
-	/**
-	 * @deprecated Use MathOperator.randomOp(char[] ops) instead.
-	 * @param op1
-	 * @param op2
-	 * @param op3
-	 * @param op4
-	 * @return
-	 */
-	private static char randomOp(char op1, char op2, char op3, char op4){
-		char[] ops = new char[4];
-		ops[0] = op1;
-		ops[1] = op2;
-		ops[2] = op3;
-		ops[3] = op4;
-
-		if(op4 == ' '){
-			int randomIndex = generator.nextInt(3);
-			return ops[randomIndex];
-		}else if (op3 == ' '){
-			int randomIndex = generator.nextInt(2);
-			return ops[randomIndex];
-		}else{
-			int randomIndex = generator.nextInt(4);
-			return ops[randomIndex];
-		}
-	}
-
 	private static char randomOp(char [] ops){
 		int randomIndex = generator.nextInt(ops.length);
 		return ops[randomIndex];
@@ -274,9 +252,12 @@ public class MathOperator {
 		}else if (operationToUse == '-'){
 			total = number1 - number2;
 			EnterText("What is " + number1 + " - " + number2 + "?", true);
-		}else{
+		}else if (operationToUse == 'x'){
 			total = number1 * number2;
 			EnterText("What is " + number1 + " x " + number2 + "?", true);
+		}else{
+			total = number1 / number2;
+			EnterText("What is " + number1 + " / " + number2 + "?");
 		}
 	}
 
@@ -298,18 +279,18 @@ public class MathOperator {
 	}
 
 	public static int randomInt(int minRange, int maxRange, boolean canBeZero, boolean canBePrime) {
-		int result = generator.nextInt(maxRange+1) - minRange;
+		int result = generator.nextInt(maxRange+1-minRange) + minRange;
 		if(!canBeZero&&!canBePrime){
 			while(result==0||!numberIsPrime(result)){
-				result = generator.nextInt(maxRange+1+minRange) - minRange;
+				result = generator.nextInt(maxRange+1-minRange) + minRange;
 			}
 		} else if(!canBeZero){
 			while(result==0){
-				result = generator.nextInt(maxRange+1) - minRange;
+				result = generator.nextInt(maxRange+1-minRange) + minRange;
 			}
 		}else if(!canBePrime){
 			while(!numberIsPrime(result)){
-				result = generator.nextInt(maxRange+1) - minRange;
+				result = generator.nextInt(maxRange+1+minRange) + minRange;
 			}
 		}
 		return result;
