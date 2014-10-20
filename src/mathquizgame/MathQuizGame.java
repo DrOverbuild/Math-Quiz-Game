@@ -275,10 +275,10 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		return timerRunning;
 	}
 
-	public void inputRequestsFocus(){
-		input.selectAll();
-		input.requestFocus();
-		input.requestFocusInWindow();
+	public static void inputRequestsFocus(){
+		frame.input.selectAll();
+		frame.input.requestFocus();
+		frame.input.requestFocusInWindow();
 	}
 
 	/**

@@ -38,34 +38,7 @@ public class MathOperator {
 	public static final int CUSTOM_DIFFICULTY = 3;
 
 	public static void operate(int userAnswer){
-
-		if (MathQuizGame.frame.numberOfTimesPlayed <= numberOfTimesWillBePlayed - 1){
-			if (userAnswer == total){
-				EnterText("You are correct!");
-				MathQuizGame.score += pointsWorth;
-
-				newNumbers();
-			} else {
-				EnterText("Wrong. Correct Answer: " + total);
-
-				newNumbers();
-
-			}
-			MathQuizGame.setQuestionState(0);
-		} else {
-
-			if (total == userAnswer){
-				EnterText("You are correct!");
-				MathQuizGame.score += pointsWorth;
-			}else{
-				EnterText("Wrong. Correct Answer: " + total);
-			}
-			if(MathQuizGame.getTimerRunning()){
-				MathQuizGame.timer.stop();
-			}
-			MathQuizGame.endGame();
-
-		}
+		operate(userAnswer, true);
 	}
 
 	public static void operate(int userAnswer, boolean showCorrectMessage) {
@@ -75,11 +48,11 @@ public class MathOperator {
 				if(showCorrectMessage) EnterText("You are correct!");
 				MathQuizGame.score += pointsWorth;
 
-				newNumbers();
+				nextQuestion();
 			} else {
 				if(showCorrectMessage) EnterText("Wrong. Correct Answer: " + total);
 
-				newNumbers();
+				nextQuestion();
 
 			}
 			MathQuizGame.setQuestionState(0);
@@ -108,7 +81,7 @@ public class MathOperator {
 		}
 		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 		GenerateNewNumbers(0);
-		determineQuestionToAsk();
+		askQuestion();
 		MathQuizGame.frame.input.requestFocusInWindow();
 		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -122,7 +95,7 @@ public class MathOperator {
 		}
 		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 		GenerateNewNumbers(1);
-		determineQuestionToAsk();
+		askQuestion();
 		MathQuizGame.frame.input.requestFocusInWindow();
 		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -136,7 +109,7 @@ public class MathOperator {
 		}
 		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 		GenerateNewNumbers(2);
-		determineQuestionToAsk();
+		askQuestion();
 		MathQuizGame.frame.input.requestFocusInWindow();
 		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -190,7 +163,7 @@ public class MathOperator {
 		}
 
 		GenerateNewNumbers(3);
-		determineQuestionToAsk();
+		askQuestion();
 		MathQuizGame.frame.input.requestFocusInWindow();
 		MathQuizGame.frame.input.selectAll();
 		MathQuizGame.setQuestionState(0);
@@ -217,7 +190,7 @@ public class MathOperator {
 				number1 = generator.nextInt(21);
 				number2 = generator.nextInt(21);
 				if(number1<=10&&number2<=10){
-					operationToUse = randomOp('+','x',' ',' ');
+					operationToUse = randomOp(new char[]{'+','x'});
 				}else{
 					operationToUse = '+';
 				}
@@ -226,19 +199,18 @@ public class MathOperator {
 				pointsWorth = 10;
 				break;
 			case 2:
-				number1 = generator.nextInt(41) - 20;
-				number2 = generator.nextInt(41) - 20;
-				operationToUse = randomOp('+','-','x',' ');
+				number1 = randomInt(-20, 20);
+				number2 = randomInt(-20, 20);
+				operationToUse = randomOp(new char[]{'+','-','x'});
 				numberOfTimesWillBePlayed = 10;
 				pointsWorth = 10;
 				break;
 			case 3:
 				operationToUse = randomOp(customOperations.toCharArray());
+				number1 = randomInt(customMinRange, customMaxRange, true, true);
+				number2 = randomInt(customMinRange, customMaxRange, false);
+
 				if(operationToUse == '/'){
-					//number1 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
-					//number2 = generator.nextInt(customMaxRange - customMinRange) + customMinRange;
-					number1 = randomInt(customMinRange, customMaxRange, true, true);
-					number2 = randomInt(customMinRange, customMaxRange, false);
 					// This loop should prevent answer from being a fraction. If this isn't the case, call me maybe.
 					while(number1%number2 == 0){
 						number2 = randomInt(customMinRange, customMaxRange, false);
@@ -263,6 +235,14 @@ public class MathOperator {
 		number2 = 0;
 	}
 
+	/**
+	 * @deprecated Use MathOperator.randomOp(char[] ops) instead.
+	 * @param op1
+	 * @param op2
+	 * @param op3
+	 * @param op4
+	 * @return
+	 */
 	private static char randomOp(char op1, char op2, char op3, char op4){
 		char[] ops = new char[4];
 		ops[0] = op1;
@@ -287,7 +267,7 @@ public class MathOperator {
 		return ops[randomIndex];
 	}
 
-	private static void determineQuestionToAsk(){
+	private static void askQuestion(){
 		if(operationToUse == '+'){
 			total = number1 + number2;
 			EnterText("What is " + number1 + " + " + number2 + "?", true);
@@ -299,36 +279,29 @@ public class MathOperator {
 			EnterText("What is " + number1 + " x " + number2 + "?", true);
 		}
 	}
-	private static void newNumbers(){
+
+	private static void nextQuestion(){
 		MathQuizGame.frame.numberOfTimesPlayed += 1;
 		EnterText("Question #" + MathQuizGame.frame.numberOfTimesPlayed);
 		GenerateNewNumbers(MathQuizGame.difficultyLevel);
-		determineQuestionToAsk();
-		MathQuizGame.frame.input.requestFocusInWindow();
-		MathQuizGame.frame.input.selectAll();
+		askQuestion();
+		MathQuizGame.inputRequestsFocus();
 		MathQuizGame.setQuestionState(0);
 	}
-	
+
 	public static int randomInt(int minRange, int maxRange){
 		return randomInt(minRange, maxRange, true);
 	}
-	
+
 	public static int randomInt(int minRange, int maxRange, boolean canBeZero){
-		int result = generator.nextInt(maxRange+1) - minRange;
-		
-		while(result==0){
-			// Try again to get a random number until result is not zero
-			result = generator.nextInt(maxRange+1) - minRange;
-		}
-		
-		return result;
+		return randomInt(minRange, maxRange, canBeZero, true);
 	}
-	
+
 	public static int randomInt(int minRange, int maxRange, boolean canBeZero, boolean canBePrime) {
 		int result = generator.nextInt(maxRange+1) - minRange;
 		if(!canBeZero&&!canBePrime){
 			while(result==0||!numberIsPrime(result)){
-				result = generator.nextInt(maxRange+1) - minRange;
+				result = generator.nextInt(maxRange+1+minRange) - minRange;
 			}
 		} else if(!canBeZero){
 			while(result==0){
@@ -341,7 +314,7 @@ public class MathOperator {
 		}
 		return result;
 	}
-	
+
 	public static boolean numberIsPrime(int number){
 		int sumOfFactors = 0;
 		for (int i = 1; i<= number/2; i++){
@@ -350,7 +323,7 @@ public class MathOperator {
 			}
 		}
 		sumOfFactors+=number;
-		
+
 		return sumOfFactors==number+1;
 	}
 }
