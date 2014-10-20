@@ -14,7 +14,12 @@ public class SetFontCommand implements Command{
 
 	@Override
 	public void execute(String[] args){
-		mathquizgame.MathQuizGame.setfont(args[0]);
+		StringBuilder font = new StringBuilder();
+		for (int i = 0; i < args.length - 1; i++){
+			font.append(args[i]).append(" ");
+		}
+		font.append(args[args.length-1]);
+		mathquizgame.MathQuizGame.setfont(font.toString());
 	}
 
 	@Override
