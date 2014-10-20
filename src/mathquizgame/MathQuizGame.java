@@ -275,20 +275,27 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		return timerRunning;
 	}
 
+	public void inputRequestsFocus(){
+		input.selectAll();
+		input.requestFocus();
+		input.requestFocusInWindow();
+	}
+
 	/**
 	 * This method is called when user presses enter on the keyboard or clicks the enter button on the UI.
 	 */
 	public void somethingHappened(){
 		try{
-			String txt;
-			String txtToLowerCase;
-			txt = input.getText();
-			txtToLowerCase = txt.toLowerCase();
-			inputtedLines.add(txt);
+			String txt = input.getText();
+			String txtToLowerCase = txt.toLowerCase();
+
+			if(!inputtedLines.get(inputtedLines.size()-1).equals(txt)){
+			    inputtedLines.add(txt);
+			}
+
 			indexArrayThing=inputtedLines.size()-1;
 
-			input.selectAll();
-			input.requestFocus();
+			inputRequestsFocus();
 
 			if (txtToLowerCase.startsWith("/")){
 				try {
@@ -304,11 +311,10 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 						int inputValue = Integer.parseInt(input.getText());
 						EnterText(" " + txt);
 						MathOperator.operate(inputValue);
-						input.requestFocusInWindow();
-						input.selectAll();
+						inputRequestsFocus();
 					} catch (NumberFormatException e){ // User typed something that wasn't a command or a number
 						EnterText("Please type a number or one of the commands available.");
-						input.selectAll();
+						inputRequestsFocus();
 					}
 				}else if(state == DIFFICULTY_CHANGING_STATE){
 					if (txtToLowerCase.equals("elementary") || txtToLowerCase.equals("e")) {
@@ -328,13 +334,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 						EnterText("While 50 is the maximum, 10 is the minimum, x is the operation to use, and the game will ask 10 questions.");
 						EnterText("The available operations are: \"+\" (add) \"-\" (subtract) \"x\" (multiply)");
 						setQuestionState(1);
-						input.selectAll();
+						inputRequestsFocus();
 					}else if(txtToLowerCase.startsWith("/setuptimer ") || txtToLowerCase.startsWith("/timer ")){
 						setupTimer(txt);
 					}else{
 						EnterText("That is not available at the time. Please choose a difficulty level.");
-						input.requestFocusInWindow();
-						input.selectAll();
+						inputRequestsFocus();
 						setQuestionState(1);
 					}
 				}else if (state == END_OF_GAME_STATE){
@@ -347,8 +352,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			printLineToFile("[ERROR] " + e.toString());
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "An error has occured. Restarting round.", "Error", JOptionPane.ERROR_MESSAGE);
-			input.setText("y");
-			somethingHappened();
+			restart();
 		}
 	}
 
