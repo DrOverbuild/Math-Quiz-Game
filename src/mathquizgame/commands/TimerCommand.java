@@ -18,6 +18,7 @@ public class TimerCommand implements Command{
 				if(args[0].equals("off")){
 					MathQuizGame.timerRunning = false;
 					EnterText("Timer turned off");
+					MathQuizGame.frame.setTitle("MathQuizGame " + MathQuizGame.VERSION_ID);
 					return;
 				}
 			}
@@ -27,13 +28,14 @@ public class TimerCommand implements Command{
 				timerLength = "30";
 			}else{
 				timerLength = args[0];
-				System.err.println(timerLength);
+				System.out.println(timerLength);
 			}
 			try {
 				int milliseconds = Integer.parseInt(timerLength) * 1000;
 				MathQuizGame.timer = new timerControl(milliseconds);
 				EnterText("Timer setup with " + timerLength + " seconds. Timer will start countdown as soon as you choose a difficulty level.");
 				setTimerRunning(true);
+				MathQuizGame.frame.setTitle("MathQuizGame " + MathQuizGame.VERSION_ID + " -- Timer set to " + timerLength + " seconds.");
 			} catch (NumberFormatException e) {
 				EnterText("Number of seconds has to be a number.");
 			}

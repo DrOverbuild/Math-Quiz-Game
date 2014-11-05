@@ -10,9 +10,11 @@ import javax.swing.Timer;
 
 public final class timerControl implements ActionListener{
 	Timer timer;
+	int millisecondsElapsed = 0;
+	int overallDelayInSeconds = 0;
 	public timerControl(int millisec){
-		timer = new Timer(millisec, this);
-		timer.setRepeats(false);
+		timer = new Timer(1000, this);
+		timer.setRepeats(true);
 	}
 	public void start(){
 		timer.start();
@@ -22,6 +24,7 @@ public final class timerControl implements ActionListener{
 	}
 	public void stop(){
 		timer.stop();
+		millisecondsElapsed = 0;
 	}
 	public void setInitialDelay(int delay){
 		timer.setInitialDelay(delay);
@@ -29,9 +32,11 @@ public final class timerControl implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int secs = timer.getInitialDelay() / 1000;
-		MathQuizGame.EnterText("\nTimer reached " + secs + " seconds.");
-		MathQuizGame.endGame();
+
+		int secs = overallDelayInSeconds;
+		
+
+
 	}
 
 }
