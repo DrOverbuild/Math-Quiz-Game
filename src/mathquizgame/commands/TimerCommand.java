@@ -31,14 +31,16 @@ public class TimerCommand implements Command{
 				System.out.println(timerLength);
 			}
 			try {
-				int milliseconds = Integer.parseInt(timerLength) * 1000;
-				MathQuizGame.timer = new timerControl(milliseconds);
+				int seconds = Integer.parseInt(timerLength);
+				MathQuizGame.timer = new timerControl(seconds);
 				EnterText("Timer setup with " + timerLength + " seconds. Timer will start countdown as soon as you choose a difficulty level.");
 				setTimerRunning(true);
-				MathQuizGame.frame.setTitle("MathQuizGame " + MathQuizGame.VERSION_ID + " -- Timer set to " + timerLength + " seconds.");
+				MathQuizGame.frame.setTitle("MathQuizGame " + MathQuizGame.VERSION_ID + " — Timer set to " + timerLength + " seconds.");
 			} catch (NumberFormatException e) {
 				EnterText("Number of seconds has to be a number.");
 			}
+		}else{
+			EnterText("You can't use /timer at this time.");
 		}
 	}
 

@@ -69,7 +69,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	static int currentSize;
 	static Color currentColor;
 
-	public static timerControl timer;
+	public static timerControl timer = null;
 	public static boolean timerRunning;
 
 	// Fields for File management
@@ -252,6 +252,9 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	public static void endGame(){
+		if(timer != null && getTimerRunning()){
+			timer.stop();
+		}
 		EnterText("You are finished with your quiz.");
 		EnterText("Here's your score: " + MathQuizGame.score + "%");
 
@@ -369,6 +372,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	public static void restart(){
+		
+		if(timer != null && getTimerRunning()){
+			timer.stop();
+		}
+		
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School, or Custom");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
 	}
