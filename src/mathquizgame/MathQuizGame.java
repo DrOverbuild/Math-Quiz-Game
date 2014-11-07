@@ -1,9 +1,9 @@
+package mathquizgame;
+
 /*
  * Copyright (c) 2013 Jasper Reddin
  * All rights reserved
  */
-
-package mathquizgame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,10 +35,6 @@ import javax.swing.ScrollPaneConstants;
 import mathquizgame.commands.CommandImpl;
 import mathquizgame.commands.CommandNotFoundException;
 import mathquizgame.commands.CustomCommand;
-
-/**
- * @author Jasper
- */
 
 public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 
@@ -129,12 +125,12 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 		indexArrayThing = 0;
 
 		addWindowFocusListener(new WindowAdapter() {
-							   @Override
-							   public void windowGainedFocus(WindowEvent e) {
-							   input.requestFocusInWindow();
-							   input.selectAll();
-							   }
-							   });
+			@Override
+			public void windowGainedFocus(WindowEvent e) {
+				input.requestFocusInWindow();
+				input.selectAll();
+			}
+		});
 
 		input.addMouseListener(new MouseListener() {
 
@@ -204,7 +200,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	public void launch(){
 		// Find date of
 		Calendar cal = Calendar.getInstance();
-    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		int calMonth = cal.get(Calendar.MONTH) + 1;
 		String date = calMonth + "-" + cal.get(Calendar.DATE);
 
@@ -288,11 +284,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	 * This method is called when user presses enter on the keyboard or clicks the enter button on the UI.
 	 */
 	public void somethingHappened(){
-		
+
 		try{
 			String txt = input.getText();
 			String txtToLowerCase = txt.toLowerCase();
-			
+
 			EnterText(" " + txt);
 
 			if(inputtedLines.size()>0){
@@ -333,7 +329,7 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 					}else if(txtToLowerCase.equals("high school") || txtToLowerCase.equals("h")){
 						MathOperator.startGameHigh();
 					}else if ((txtToLowerCase.startsWith("custom ")&&!txtToLowerCase.equals("custom ")) ||
-							  (txtToLowerCase.startsWith("c ")&&!txtToLowerCase.equals("c "))){
+							(txtToLowerCase.startsWith("c ")&&!txtToLowerCase.equals("c "))){
 						new CustomCommand().execute(CommandImpl.parseArgs(txtToLowerCase.split(" ")[0], "/" + txt));
 					}else if(txtToLowerCase.startsWith("custom") || txtToLowerCase.startsWith("c")){
 						EnterText("----------------------");
@@ -372,11 +368,11 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 	}
 
 	public static void restart(){
-		
+
 		if(timer != null && getTimerRunning()){
 			timer.stop();
 		}
-		
+
 		EnterText("Please enter your difficulty: Elementary, Middle School, High School, or Custom");
 		setQuestionState(DIFFICULTY_CHANGING_STATE);
 	}
@@ -503,4 +499,5 @@ public class MathQuizGame extends JFrame implements ActionListener, KeyListener{
 			System.exit(1);
 		}
 
-	}}
+	}
+}
